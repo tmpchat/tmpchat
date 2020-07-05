@@ -1,60 +1,61 @@
-# 概要
+# tmpchat
 
-tmpchat - _〜 エンジニアの儚いひととき 〜_
+A fleeting moment of Engineer.
 
 https://tmpchat.com/
 
-## 特徴
+## Feature
 
-- 匿名
-- エンジニア向け
+- Anonymity
+- For Engineer
 
-## チャット内容
+## Chat topics
 
-- プログラミングなど IT 技術関連についての質問
-- 転職相談
-- 雑談
-  - 勉強方法, 英語, リモートワークなど
+- Programming Language Questions
+- About career change
+- Question regarding IT technology and other
+- Light talk
+  - How to study, English, About Remote Work
 
 ## 機能
 
-- トップページ
-- ルーム検索
-  - Sort
-    - 人気順
-    - 新着順
-- チャットルーム
-  - 全員匿名
-  - 記法
+- Top page
+- Search Room
+  - Sort Room
+    - Popular
+    - New arrivals
+- Char Room
+  - Anonymity
+  - Code Syntax
     - Markdown ?
     - WYSIWYG ?
-  - 自動 Room 削除
+  - Auto Room deletion
+  - Room name is not URL Path
   - Room 名 != URL PATH
     - `room/XXXXXXXXXXXXXXXXXXX`
-  - 自動 Room 生成
-    - [GitHub Trending](https://github.com/trending) から取得
+  - Auto Room creation
+    - From [GitHub Trending](https://github.com/trending)
 
-## 実装方法 / 技術選定
+## Architecture
 
 ### Service
 
 - Frontend
   - HTML, CSS, JavaScript(Elm)
-- Backend
+- Backend(Golang)
   - WebSocket(Room)
-  - API(Search, Room 生成, Room 削除)
+  - API(Search, Create Room, Delete Room)
 - Storage(DB)
-  - Chat用
-  - Room一覧
+  - For Room Chat
+  - Room list
 - Job
-  - Room削除のトリガー
-  - 自動Room生成
-
-### Architecture
+  - Room deletion trigger
+  - Auto Room creation
 
 ```
 Create Room: Frontend -> API
-Chat:        Frontend -> WebSocket
+Chat: Frontend -> WebSocket
+Delete Room: Job      -> API
 ```
 
 ### Infrastructure
@@ -77,7 +78,7 @@ Chat:        Frontend -> WebSocket
   - job
   - terraoform
   - kubernetes
-- ブランチ戦略
+- Branch strategy
   - git-flow
 
 ### Communication
