@@ -31,7 +31,7 @@ https://tmpchat.com/
     - WYSIWYG ?
   - Auto Room deletion
   - Room name is not URL Path
-  - Room 名 != URL PATH
+  - Room name != URL PATH
     - `room/XXXXXXXXXXXXXXXXXXX`
   - Auto Room creation
     - From [GitHub Trending](https://github.com/trending)
