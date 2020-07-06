@@ -17,7 +17,7 @@ https://tmpchat.com/
 - Light talk
   - How to study, English, About Remote Work
 
-## 機能
+## Component
 
 - Top page
 - Search Room
@@ -31,7 +31,6 @@ https://tmpchat.com/
     - WYSIWYG ?
   - Auto Room deletion
   - Room name is not URL Path
-  - Room name != URL PATH
     - `room/XXXXXXXXXXXXXXXXXXX`
   - Auto Room creation
     - From [GitHub Trending](https://github.com/trending)
