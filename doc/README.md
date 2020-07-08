@@ -40,7 +40,7 @@ https://tmpchat.com/
 ### Service
 
 - Frontend
-  - HTML, CSS, JavaScript(Elm)
+  - Vue.js
 - Backend(Golang)
   - WebSocket(Room)
   - API(Search, Create Room, Delete Room)
