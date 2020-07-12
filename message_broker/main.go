@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -23,25 +22,32 @@ func main() {
 	pong, err := client.Ping().Result()
 	fmt.Println(pong, err)
 
-	repo := repository.NewChatMessageRepository(client)
+	repo := repository.NewChatRoomRepository(client)
 
-	message := domain.ChatMessage{ID: "message",Value:"Hello!!", CreatedAt:time.Now()}
-	roomID := "exapmle"
-	err = repo.Set(roomID, message)
+	message := domain.ChatMessage{ID: "message", Value: "Hello!!", CreatedAt: time.Now()}
+
+	// create room
+	room, err := repo.Create()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// add message
+	err = repo.AddMessage(room.ID, message)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	getedMessage, err := repo.Get(roomID)
+	// get messages
+	getedMessages, err := repo.GetMessages(room.ID)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	if reflect.DeepEqual(message, getedMessage) != false {
-		fmt.Println("different message")
-		return
+	for _, message := range getedMessages {
+		fmt.Println(message.Value)
 	}
 
 	fmt.Println("Done")
