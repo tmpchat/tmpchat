@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-redis/redis"
 	"github.com/tmpchat/tmpchat/message_broker/domain"
+	"github.com/tmpchat/tmpchat/message_broker/repository"
 )
 
 func main() {
@@ -17,9 +18,12 @@ func main() {
 		DB:       0,  // use default DB
 	})
 
-	repo := NewChatMessageRepository(client)
+	pong, err := client.Ping().Result()
+	fmt.Println(pong, err)
 
-	_, err := repo.Get("id")
+	repo := repository.NewChatMessageRepository(client)
+
+	_, err = repo.Get("id")
 	if err != nil {
 		return
 	}
