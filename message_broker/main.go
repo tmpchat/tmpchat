@@ -11,15 +11,15 @@ func main() {
 	fmt.Println("Hello MessageBroker.")
 
 	// TODO: add redis config
-    client := redis.NewClient(&redis.Options{
-        Addr:     "localhost:6379",
-        Password: "", // no password set
-        DB:       0,  // use default DB
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
 	})
 
 	repo := NewChatMessageRepository(client)
 
-	message, err := repo.Get("id")
+	_, err := repo.Get("id")
 	if err != nil {
 		return
 	}
