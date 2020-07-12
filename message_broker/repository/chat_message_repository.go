@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"fmt"
+	"bytes"
 
 	"github.com/go-redis/redis"
 
@@ -9,8 +9,7 @@ import (
 )
 
 type ChatMessageRepository interface {
-	// TODO: add room id
-	Get(id string) (*domain.ChatMessage, error)
+	Get(roomID string) (*domain.ChatMessage, error)
 	Set(roomID string, message domain.ChatMessage) error
 }
 
@@ -23,9 +22,17 @@ func NewChatMessageRepository(client *redis.Client) ChatMessageRepository {
 	return chatMessageRepository{client}
 }
 
-func (c chatMessageRepository) Get(id string) (*domain.ChatMessage, error) {
-	fmt.Println("not impl Get")
-	return nil, nil
+func (c chatMessageRepository) Get(roomID string) (*domain.ChatMessage, error) {
+	raw, err := c.db.Get(roomID).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	message := domain.ChatMessage{}
+	if err := message.UnmarshalBinary(bytes.NewBufferString(raw).Bytes()); err != nil {
+		return nil, err
+	}
+	return &message, nil
 }
 
 func (c chatMessageRepository) Set(roomID string, message domain.ChatMessage) error {

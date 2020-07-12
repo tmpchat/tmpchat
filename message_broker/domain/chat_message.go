@@ -15,6 +15,6 @@ func(m ChatMessage) MarshalBinary() ([]byte, error) {
   return json.Marshal(m)
 }
 
-func(m ChatMessage) UnmarshalBinary(data []byte) error {
-  return json.Unmarshal(data, &m)
+func(m *ChatMessage) UnmarshalBinary(data []byte) error {
+  return json.Unmarshal(data, m)
 }
