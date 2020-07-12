@@ -12,7 +12,7 @@ type ChatMessageRepository interface {
 	// TODO: add room id
 	Get(id string) (*domain.ChatMessage, error)
 	// TODO: add room id
-	Set(domain.ChatMessage) (error)
+	Set(roomID string, message domain.ChatMessage) (error)
 }
 
 type chatMessageRepository struct {
@@ -29,7 +29,8 @@ func (c chatMessageRepository) Get(id string) (*domain.ChatMessage, error) {
 	return nil, nil
 }
 
-func (c chatMessageRepository) Set(domain.ChatMessage) (error) {
+func (c chatMessageRepository) Set(roomID string, message domain.ChatMessage) (error) {
 	fmt.Println("not impl Set")
-	return nil
+	err := c.db.Set(roomID, message, 0).Err()
+	return err
 }

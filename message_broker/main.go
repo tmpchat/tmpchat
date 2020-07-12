@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/go-redis/redis"
 	"github.com/tmpchat/tmpchat/message_broker/domain"
@@ -28,8 +29,10 @@ func main() {
 		return
 	}
 
-	err = repo.Set(domain.ChatMessage{})
+	message := domain.ChatMessage{ID: "message",Value:"Hello!!", CreatedAt:time.Now()}
+	err = repo.Set("example", message)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 }
