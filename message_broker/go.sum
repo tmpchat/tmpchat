@@ -1,0 +1,3 @@
+github.com/go-redis/redis v6.15.8+incompatible h1:BKZuG6mCnRj5AOaWJXoCgf6rqTYnYJLe4en2hxT7r9o=
+github.com/go-redis/redis v6.15.8+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=
+github.com/tmpchat/tmpchat v0.0.0-20200710145736-9d6d52bc98c6 h1:clgSCEW4bxSJQJ3dmWmcd9kISWqWp4fqXVzWJxdcvWA=
