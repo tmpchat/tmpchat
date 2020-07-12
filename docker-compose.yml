@@ -6,3 +6,7 @@ services:
       - ./frontend/dist/:/usr/share/nginx/html
     ports:
       - "8080:80"
+  redis:
+    image: redis:6.0.5-alpine
+    ports:
+      - "6379:6379"
