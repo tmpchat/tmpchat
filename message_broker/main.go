@@ -21,6 +21,10 @@ func main() {
 
 	pong, err := client.Ping().Result()
 	fmt.Println(pong, err)
+	if err != nil {
+		fmt.Println("redis connection error")
+		return
+	}
 
 	repo := repository.NewChatRoomRepository(client)
 
@@ -28,9 +32,13 @@ func main() {
 
 	// create room
 	roomID := "example_room_id"
-	room, err := repo.Create(roomID)
+	room, err := repo.Find(roomID)
 	if err != nil {
-		fmt.Println(err)
+		room, err = repo.Create(roomID)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	}
 
 	// add message
