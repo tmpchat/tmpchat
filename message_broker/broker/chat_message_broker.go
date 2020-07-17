@@ -3,11 +3,12 @@ package broker
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 
-	"github.com/tmpchat/tmpchat/message_broker/repository"
 	"github.com/tmpchat/tmpchat/message_broker/domain"
+	"github.com/tmpchat/tmpchat/message_broker/repository"
 )
 
 // TODO: change local scope
@@ -21,7 +22,7 @@ func NewChatMessageBroker(repo repository.ChatRoomRepository) *ChatMessageBroker
 	return &ChatMessageBroker{repo}
 }
 
-func (c ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
+func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Print("upgrade:", err)
@@ -38,17 +39,17 @@ func (c ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
 
 		// TODO: create interctor? usecase? layer
 		roomID := "example_room_id"
-		room, err := repo.Find(roomID)
+		room, err := bro.repo.Find(roomID)
 		if err != nil {
-			room, err = repo.Create(roomID)
+			room, err = bro.repo.Create(roomID)
 			if err != nil {
 				log.Println("create failed.")
 			}
 		}
 
-		message := domain.ChatMessage{ID: "id", Value: message, CreatedAt: time.Now()}
+		chatmessage := domain.ChatMessage{ID: "id", Value: string(message), CreatedAt: time.Now()}
 		// add message
-		err = repo.AddMessage(room.ID, message)
+		err = bro.repo.AddMessage(room.ID, chatmessage)
 		if err != nil {
 			log.Println("add failed.")
 			break
@@ -61,4 +62,3 @@ func (c ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-
