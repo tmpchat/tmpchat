@@ -2,6 +2,7 @@ package repository
 
 import (
 	"bytes"
+	"time"
 
 	"github.com/go-redis/redis"
 
@@ -25,7 +26,8 @@ func NewChatRoomRepository(client *redis.Client) ChatRoomRepository {
 }
 
 func (c chatRoomRepository) Create(roomID string) (*domain.ChatRoom, error) {
-	room := domain.ChatRoom{ID: roomID}
+	now := time.Now()
+	room := domain.ChatRoom{ID: roomID, CreatedAt: now, UpdateAt: now}
 	if err := c.db.Set(room.ID, room, 0).Err(); err != nil {
 		return nil, err
 	}
@@ -52,6 +54,7 @@ func (c chatRoomRepository) AddMessage(roomID string, message domain.ChatMessage
 	}
 	// TODO: duplication check message id
 	room.Messages = append(room.Messages, message)
+	room.UpdateAt = time.Now()
 	if err := c.db.Set(roomID, room, 0).Err(); err != nil {
 		return err
 	}

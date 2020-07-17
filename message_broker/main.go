@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"log"
+	"net/http"
 
 	"github.com/go-redis/redis"
-	"github.com/tmpchat/tmpchat/message_broker/domain"
+	"github.com/tmpchat/tmpchat/message_broker/broker"
 	"github.com/tmpchat/tmpchat/message_broker/repository"
 )
 
@@ -27,37 +28,9 @@ func main() {
 	}
 
 	repo := repository.NewChatRoomRepository(client)
-
-	message := domain.ChatMessage{ID: "message", Value: "Hello!!", CreatedAt: time.Now()}
-
-	// create room
-	roomID := "example_room_id"
-	room, err := repo.Find(roomID)
-	if err != nil {
-		room, err = repo.Create(roomID)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	}
-
-	// add message
-	err = repo.AddMessage(room.ID, message)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	// get messages
-	getedMessages, err := repo.GetMessages(room.ID)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	for _, message := range getedMessages {
-		fmt.Println(message.Value)
-	}
+	broker := broker.NewChatMessageBroker(repo)
+	http.HandleFunc("/broker", broker.PostMessage)
+	log.Fatal(http.ListenAndServe("localhost:8081", nil))
 
 	fmt.Println("Done")
 }
