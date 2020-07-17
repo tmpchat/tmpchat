@@ -9,7 +9,7 @@ import (
 )
 
 type ChatRoomRepository interface {
-	Create() (*domain.ChatRoom, error)
+	Create(roomID string) (*domain.ChatRoom, error)
 	Find(roomID string) (*domain.ChatRoom, error)
 	AddMessage(roomID string, message domain.ChatMessage) error
 	GetMessages(roomID string) ([]domain.ChatMessage, error)
@@ -24,9 +24,8 @@ func NewChatRoomRepository(client *redis.Client) ChatRoomRepository {
 	return chatRoomRepository{client}
 }
 
-func (c chatRoomRepository) Create() (*domain.ChatRoom, error) {
-	// TODO: multiple room
-	room := domain.ChatRoom{ID: "example_room_id"}
+func (c chatRoomRepository) Create(roomID string) (*domain.ChatRoom, error) {
+	room := domain.ChatRoom{ID: roomID}
 	if err := c.db.Set(room.ID, room, 0).Err(); err != nil {
 		return nil, err
 	}

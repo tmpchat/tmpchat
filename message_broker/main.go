@@ -27,7 +27,8 @@ func main() {
 	message := domain.ChatMessage{ID: "message", Value: "Hello!!", CreatedAt: time.Now()}
 
 	// create room
-	room, err := repo.Create()
+	roomID := "example_room_id"
+	room, err := repo.Create(roomID)
 	if err != nil {
 		fmt.Println(err)
 	}
