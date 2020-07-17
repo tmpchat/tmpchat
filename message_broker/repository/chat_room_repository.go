@@ -47,13 +47,8 @@ func (c chatRoomRepository) Find(roomID string) (*domain.ChatRoom, error) {
 }
 
 func (c chatRoomRepository) AddMessage(roomID string, message domain.ChatMessage) error {
-	raw, err := c.db.Get(roomID).Result()
+	room, err := c.Find(roomID)
 	if err != nil {
-		return err
-	}
-
-	room := domain.ChatRoom{}
-	if err := room.UnmarshalBinary(bytes.NewBufferString(raw).Bytes()); err != nil {
 		return err
 	}
 	// TODO: duplication check message id
@@ -66,13 +61,8 @@ func (c chatRoomRepository) AddMessage(roomID string, message domain.ChatMessage
 }
 
 func (c chatRoomRepository) GetMessages(roomID string) ([]domain.ChatMessage, error) {
-	raw, err := c.db.Get(roomID).Result()
+	room, err := c.Find(roomID)
 	if err != nil {
-		return nil, err
-	}
-
-	room := domain.ChatRoom{}
-	if err := room.UnmarshalBinary(bytes.NewBufferString(raw).Bytes()); err != nil {
 		return nil, err
 	}
 
