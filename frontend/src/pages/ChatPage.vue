@@ -18,8 +18,8 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-text-field label="Message" />
-      <v-btn>
+      <v-text-field label="Message" v-model="postMessage"/>
+      <v-btn v-on:click="sendMessage">
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
     </v-row>
@@ -45,8 +45,13 @@
           value: "Value3"
         }
       ],
-      postMessage: ""
+      postMessage: "default yeeeee"
     }),
+    methods: {
+      sendMessage() {
+        console.log(this.postMessage)
+      }
+    }
   }
 </script>
 
