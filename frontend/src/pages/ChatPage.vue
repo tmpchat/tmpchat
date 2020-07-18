@@ -3,27 +3,18 @@
     <h1>Chat Page, Room Title</h1>
     <v-row>
       <v-col cols="12">
-        <!-- TODO: change to list -->
-        <v-card
-          outlined
-        >
-          <v-list-item three-line style="text-align: left;">
-            <v-list-item-content>
-              <v-list-item-title >1. No name</v-list-item-title>
-              <v-list-item-subtitle>this message</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-card>
-        <v-card
-          outlined
-        >
-          <v-list-item three-line style="text-align: left;">
-            <v-list-item-content>
-              <v-list-item-title >2. No name</v-list-item-title>
-              <v-list-item-subtitle>ahaha</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-card>
+        <li v-for="message in messages" :key="message.title">
+          <v-card
+            outlined
+          >
+            <v-list-item three-line style="text-align: left;">
+              <v-list-item-content>
+                <v-list-item-title >{{ message.title }}</v-list-item-title>
+                <v-list-item-subtitle>{{ message.value }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-card>
+        </li>
       </v-col>
     </v-row>
     <v-row>
@@ -39,6 +30,28 @@
   export default {
     name: 'ChatPage',
 
-    data: () => ({}),
+    data: () => ({
+      messages: [
+        {
+          title: "Title1",
+          value: "Value1"
+        },
+        {
+          title: "Title2",
+          value: "Value2"
+        },
+        {
+          title: "Title3",
+          value: "Value3"
+        }
+      ],
+      postMessage: ""
+    }),
   }
 </script>
+
+<style scoped>
+li {
+  list-style: none;
+}
+</style>
