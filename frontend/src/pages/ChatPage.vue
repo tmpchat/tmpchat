@@ -45,7 +45,7 @@
           value: "Value3"
         }
       ],
-      postMessage: "default yeeeee"
+      postMessage: ""
     }),
     methods: {
       sendMessage() {
