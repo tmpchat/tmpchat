@@ -45,12 +45,25 @@
           value: "Value3"
         }
       ],
-      postMessage: ""
+      postMessage: "",
+      socket: null
     }),
     methods: {
       sendMessage() {
-        console.log(this.postMessage)
+        console.log(this.postMessage);
+        this.socket.send(this.postMessage);
+      },
+      receiveMessage(event) {
+	console.log('Message from server ', event.data);
+	this.messages.push({
+          title: "Example",
+          value: event.data
+	});
       }
+    },
+    created: function() {
+      this.socket = new WebSocket('ws://localhost:8081/broker');
+      this.socket.onmessage = this.receiveMessage;
     }
   }
 </script>
