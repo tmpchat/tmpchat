@@ -13,13 +13,10 @@ services:
   message_broker:
     build:
       context: ./message_broker
-      target: build
-    volumes:
-      - ./message_broker:/go/app
-    command: ./message_broker
     environment:
       - REDIS_HOST=redis:6379
     ports:
       - "8081:8081"
+    tty: true
     depends_on:
       - redis
