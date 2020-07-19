@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,11 +12,12 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello MessageBroker.")
-
-	// TODO: add redis config
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:    redisHost,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
