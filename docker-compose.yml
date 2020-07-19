@@ -10,3 +10,13 @@ services:
     image: redis:6.0.5-alpine
     ports:
       - "6379:6379"
+  message_broker:
+    build:
+      context: ./message_broker
+    environment:
+      - REDIS_HOST=redis:6379
+    ports:
+      - "8081:8081"
+    tty: true
+    depends_on:
+      - redis

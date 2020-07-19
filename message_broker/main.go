@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-redis/redis"
 	"github.com/tmpchat/tmpchat/message_broker/broker"
@@ -11,11 +12,12 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello MessageBroker.")
-
-	// TODO: add redis config
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     redisHost,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
@@ -30,7 +32,7 @@ func main() {
 	repo := repository.NewChatRoomRepository(client)
 	broker := broker.NewChatMessageBroker(repo)
 	http.HandleFunc("/broker", broker.PostMessage)
-	log.Fatal(http.ListenAndServe("localhost:8081", nil))
+	log.Fatal(http.ListenAndServe(":8081", nil))
 
 	fmt.Println("Done")
 }
