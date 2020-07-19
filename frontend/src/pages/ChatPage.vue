@@ -20,7 +20,7 @@
     <v-row>
       <v-text-field label="Message" v-model="postMessage"/>
       <v-btn v-on:click="sendMessage">
-        <v-icon>mdi-pencil</v-icon>
+        <v-icon>mdi-send</v-icon>
       </v-btn>
     </v-row>
   </v-container>
