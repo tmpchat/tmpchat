@@ -39,6 +39,10 @@
       sendMessage() {
         console.log(this.postMessage);
         this.socket.send(this.postMessage);
+	this.clearMessage();
+      },
+      clearMessage() {
+        this.postMessage = '';
       },
       receiveMessage(event) {
 	console.log('Message from server ', event.data);
