@@ -30,7 +30,9 @@ func main() {
 	}
 
 	repo := repository.NewChatRoomRepository(client)
-	broker := broker.NewChatMessageBroker(repo)
+	hub := broker.NewClientHub()
+	go hub.Run()
+	broker := broker.NewChatMessageBroker(repo, hub)
 	http.HandleFunc("/broker", broker.PostMessage)
 	log.Fatal(http.ListenAndServe(":8081", nil))
 

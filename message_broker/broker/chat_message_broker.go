@@ -16,10 +16,11 @@ var upgrader = websocket.Upgrader{} // use default options
 
 type ChatMessageBroker struct {
 	repo repository.ChatRoomRepository
+	hub *ClientHub
 }
 
-func NewChatMessageBroker(repo repository.ChatRoomRepository) *ChatMessageBroker {
-	return &ChatMessageBroker{repo}
+func NewChatMessageBroker(repo repository.ChatRoomRepository, hub *ClientHub) *ChatMessageBroker {
+	return &ChatMessageBroker{repo: repo, hub: hub}
 }
 
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
@@ -29,9 +30,11 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 		log.Print("upgrade:", err)
 		return
 	}
-	defer c.Close()
+	log.Print("receive message")
+	bro.hub.register <- c
+	defer bro.closeClient(c)
 	for {
-		mt, message, err := c.ReadMessage()
+		_, message, err := c.ReadMessage()
 		if err != nil {
 			log.Println("read:", err)
 			break
@@ -56,10 +59,10 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 			break
 		}
 
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
+		bro.hub.broadcast <- message
 	}
+}
+
+func (bro ChatMessageBroker) closeClient(client *websocket.Conn) {
+	bro.hub.unregister <- client
 }
