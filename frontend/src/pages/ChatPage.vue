@@ -31,20 +31,7 @@
     name: 'ChatPage',
 
     data: () => ({
-      messages: [
-        {
-          title: "Title1",
-          value: "Value1"
-        },
-        {
-          title: "Title2",
-          value: "Value2"
-        },
-        {
-          title: "Title3",
-          value: "Value3"
-        }
-      ],
+      messages: [],
       postMessage: "",
       socket: null
     }),
