@@ -39,22 +39,25 @@
       sendMessage() {
         console.log(this.postMessage);
         this.socket.send(this.postMessage);
-	this.clearMessage();
+        this.clearMessage();
       },
       clearMessage() {
         this.postMessage = '';
       },
       receiveMessage(event) {
-	console.log('Message from server ', event.data);
-	this.messages.push({
+        console.log('Message from server ', event.data);
+        this.messages.push({
           title: "Example",
           value: event.data
-	});
+        });
       }
     },
     created: function() {
       this.socket = new WebSocket('ws://localhost:8081/broker');
       this.socket.onmessage = this.receiveMessage;
+    },
+    beforeDestroy: function() {
+      this.socket.close();
     }
   }
 </script>
