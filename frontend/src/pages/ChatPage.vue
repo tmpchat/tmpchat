@@ -37,9 +37,26 @@
     }),
     methods: {
       sendMessage() {
-        console.log(this.postMessage);
-        this.socket.send(this.postMessage);
-        this.clearMessage();
+        const readyState = this.socket.readyState;
+        console.log(`readyState value is: ${readyState}`);
+
+        switch ( readyState ) {
+          case 0:
+            console.log('Socket has been created. Please waiting for a moment.');
+            break;
+          case 1:
+            console.log('The connection is ready!!');
+            console.log(this.postMessage);
+            this.socket.send(this.postMessage);
+            this.clearMessage();
+            break;
+          case 2:
+            console.log('WebSocket is already in CLOSING state.');
+            break;
+          case 3:
+            console.log('WebSocket is already in CLOSED state.');
+            break;
+        }
       },
       clearMessage() {
         this.postMessage = '';
