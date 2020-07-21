@@ -41,7 +41,6 @@ jobs:
 
     - name: Install dependencies
       run: yarn --frozen-lockfile
-      working-directory: frontend
 
     - name: Build
       run: yarn build
