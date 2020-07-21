@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Chat Page, Room Title</h1>
+    <h1>tmpchat</h1>
     <v-row>
       <v-col cols="12">
         <li v-for="message in messages" :key="message.title">
