@@ -19,21 +19,21 @@
     </v-row>
     <v-row>
       
-      <template v-if="false">
-        <v-text-field label="Message" v-model="postMessage"/>
-        <v-btn v-on:click="sendMessage">
-          <v-icon>mdi-send</v-icon>
-        </v-btn>
-      </template>
-      <template v-else>
-        <v-text-field label="Message" v-model="postMessage" error/>
-        <v-btn v-on:click="sendMessage">
-          Retry
-        </v-btn>
-        <v-btn v-on:click="sendMessage" color="error">
-          Cancel
-        </v-btn>
-      </template>
+    <template v-if="state === 'idle'">
+      <v-text-field label="Message" v-model="postMessage"/>
+      <v-btn v-on:click="sendMessage">
+        <v-icon>mdi-send</v-icon>
+      </v-btn>
+    </template>
+    <template v-else-if="state === 'sendError'">
+      <v-text-field label="Message" v-model="postMessage" error/>
+      <v-btn v-on:click="sendMessage">
+        Retry
+      </v-btn>
+      <v-btn v-on:click="sendMessage" color="error">
+        Cancel
+      </v-btn>
+    </template>
     </v-row>
   </v-container>
 </template>
@@ -45,7 +45,8 @@
     data: () => ({
       messages: [],
       postMessage: "",
-      socket: null
+      socket: null,
+      state: "idle"
     }),
     methods: {
       sendMessage() {
@@ -55,18 +56,22 @@
         switch ( readyState ) {
           case 0:
             console.log('Socket has been created. Please waiting for a moment.');
+            this.state = "sendError";
             break;
           case 1:
             console.log('The connection is ready!!');
             console.log(this.postMessage);
             this.socket.send(this.postMessage);
             this.clearMessage();
+            this.state = "idle";
             break;
           case 2:
             console.log('WebSocket is already in CLOSING state.');
+            this.state = "sendError";
             break;
           case 3:
             console.log('WebSocket is already in CLOSED state.');
+            this.state = "sendError";
             break;
         }
       },
