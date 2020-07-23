@@ -30,7 +30,7 @@
       <v-btn v-on:click="sendMessage">
         Retry
       </v-btn>
-      <v-btn v-on:click="sendMessage" color="error">
+      <v-btn v-on:click="clearMessage" color="error">
         Cancel
       </v-btn>
     </template>
@@ -77,6 +77,7 @@
       },
       clearMessage() {
         this.postMessage = '';
+        this.state = "idle"
       },
       receiveMessage(event) {
         console.log('Message from server ', event.data);
