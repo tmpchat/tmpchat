@@ -18,10 +18,22 @@
       </v-col>
     </v-row>
     <v-row>
+      
+    <template v-if="state === 'idle'">
       <v-text-field label="Message" v-model="postMessage"/>
       <v-btn v-on:click="sendMessage">
-        <v-icon>mdi-pencil</v-icon>
+        <v-icon>mdi-send</v-icon>
       </v-btn>
+    </template>
+    <template v-else-if="state === 'sendError'">
+      <v-text-field label="Message" v-model="postMessage" error/>
+      <v-btn v-on:click="retrySendMessage">
+        Retry
+      </v-btn>
+      <v-btn v-on:click="clearMessage" color="error">
+        Cancel
+      </v-btn>
+    </template>
     </v-row>
   </v-container>
 </template>
@@ -33,24 +45,67 @@
     data: () => ({
       messages: [],
       postMessage: "",
-      socket: null
+      socket: null,
+      state: "idle"
     }),
     methods: {
+      openWebSocket(openedCallback) {
+        console.log("open websocket", this.socket)
+        this.socket = new WebSocket('ws://localhost:8081/broker');
+        if (openedCallback != null) {
+          this.socket.onopen = openedCallback;
+        }
+        this.socket.onmessage = this.receiveMessage;
+      },
+      setIdle() {
+        this.state = "idle";
+      },
       sendMessage() {
-        console.log(this.postMessage);
-        this.socket.send(this.postMessage);
+        const readyState = this.socket.readyState;
+        console.log(`readyState value is: ${readyState}`);
+
+        switch (readyState) {
+          case 0:
+            console.log('Socket has been created. Please waiting for a moment.');
+            this.state = "sendError";
+            break;
+          case 1:
+            console.log('The connection is ready!!');
+            console.log(this.postMessage);
+            this.socket.send(this.postMessage);
+            this.clearMessage();
+            this.state = "idle";
+            break;
+          default:
+            console.log('WebSocket is already in CLOSING state.');
+            this.state = "sendError";
+            break;
+        }
+      },
+      retrySendMessage() {
+        this.openWebSocket(this.reopend);
+      },
+      reopend() {
+        this.setIdle();
+        this.sendMessage();
+      },
+      clearMessage() {
+        this.postMessage = '';
+        this.state = "idle"
       },
       receiveMessage(event) {
-	console.log('Message from server ', event.data);
-	this.messages.push({
+        console.log('Message from server ', event.data);
+        this.messages.push({
           title: "Example",
           value: event.data
-	});
+        });
       }
     },
     created: function() {
-      this.socket = new WebSocket('ws://localhost:8081/broker');
-      this.socket.onmessage = this.receiveMessage;
+      this.openWebSocket(this.setIdle);
+    },
+    beforeDestroy: function() {
+      this.socket.close();
     }
   }
 </script>
