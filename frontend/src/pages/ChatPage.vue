@@ -27,7 +27,7 @@
     </template>
     <template v-else-if="state === 'sendError'">
       <v-text-field label="Message" v-model="postMessage" error/>
-      <v-btn v-on:click="sendMessage">
+      <v-btn v-on:click="retrySendMessage">
         Retry
       </v-btn>
       <v-btn v-on:click="clearMessage" color="error">
@@ -49,9 +49,16 @@
       state: "idle"
     }),
     methods: {
-      openWebSocket() {
+      openWebSocket(openedCallback) {
+        console.log("open websocket", this.socket)
         this.socket = new WebSocket('ws://localhost:8081/broker');
+        if (openedCallback != null) {
+          this.socket.onopen = openedCallback;
+        }
         this.socket.onmessage = this.receiveMessage;
+      },
+      setIdle() {
+        this.state = "idle";
       },
       sendMessage() {
         const readyState = this.socket.readyState;
@@ -69,15 +76,18 @@
             this.clearMessage();
             this.state = "idle";
             break;
-          case 2:
+          default:
             console.log('WebSocket is already in CLOSING state.');
             this.state = "sendError";
             break;
-          case 3:
-            console.log('WebSocket is already in CLOSED state.');
-            this.state = "sendError";
-            break;
         }
+      },
+      retrySendMessage() {
+        this.openWebSocket(this.reopend);
+      },
+      reopend() {
+        this.setIdle();
+        this.sendMessage();
       },
       clearMessage() {
         this.postMessage = '';
@@ -92,7 +102,7 @@
       }
     },
     created: function() {
-      this.openWebSocket();
+      this.openWebSocket(this.setIdle);
     },
     beforeDestroy: function() {
       this.socket.close();
