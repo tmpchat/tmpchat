@@ -64,7 +64,7 @@
         const readyState = this.socket.readyState;
         console.log(`readyState value is: ${readyState}`);
 
-        switch ( readyState ) {
+        switch (readyState) {
           case 0:
             console.log('Socket has been created. Please waiting for a moment.');
             this.state = "sendError";
