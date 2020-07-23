@@ -18,10 +18,22 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-text-field label="Message" v-model="postMessage"/>
-      <v-btn v-on:click="sendMessage">
-        <v-icon>mdi-send</v-icon>
-      </v-btn>
+      
+      <template v-if="false">
+        <v-text-field label="Message" v-model="postMessage"/>
+        <v-btn v-on:click="sendMessage">
+          <v-icon>mdi-send</v-icon>
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-text-field label="Message" v-model="postMessage" error/>
+        <v-btn v-on:click="sendMessage">
+          Retry
+        </v-btn>
+        <v-btn v-on:click="sendMessage" color="error">
+          Cancel
+        </v-btn>
+      </template>
     </v-row>
   </v-container>
 </template>
