@@ -49,6 +49,10 @@
       state: "idle"
     }),
     methods: {
+      openWebSocket() {
+        this.socket = new WebSocket('ws://localhost:8081/broker');
+        this.socket.onmessage = this.receiveMessage;
+      },
       sendMessage() {
         const readyState = this.socket.readyState;
         console.log(`readyState value is: ${readyState}`);
@@ -88,8 +92,7 @@
       }
     },
     created: function() {
-      this.socket = new WebSocket('ws://localhost:8081/broker');
-      this.socket.onmessage = this.receiveMessage;
+      this.openWebSocket();
     },
     beforeDestroy: function() {
       this.socket.close();
