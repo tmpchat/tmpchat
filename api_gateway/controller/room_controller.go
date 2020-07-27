@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/tmpchat/tmpchat/api_gateway/usecase"
 )
 
 type RoomController interface {
@@ -18,6 +20,13 @@ func NewRoomController() RoomController {
 }
 
 func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
+	// TODO: Recieve title
+	uu := usecase.NewRoomUsecase()
+	uuid := uu.CreateUUID()
+	fmt.Println(uuid)
+	// TODO: Create MessageBroker
+	// TODO: Insert to DB
+	// TODO: Response to Client
 	fmt.Printf(`RoomController.Create: %#v, %#v`, w, r)
 }
 
