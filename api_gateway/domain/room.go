@@ -5,8 +5,9 @@ import (
 )
 
 type RoomEntity struct {
-	ID string
-	Title string
+	ID        string
+	UUID      string
+	Title     string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt time.Time
