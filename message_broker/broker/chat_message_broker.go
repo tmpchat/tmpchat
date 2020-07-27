@@ -16,12 +16,12 @@ import (
 var upgrader = websocket.Upgrader{} // use default options
 
 type ChatMessageBroker struct {
-	uscs usecase.RoomUsecase
+	uscs usecase.ChatRoomUsecase
 	hub  *ClientHub
 }
 
 func NewChatMessageBroker(hub *ClientHub) *ChatMessageBroker {
-	return &ChatMessageBroker{uscs: usecase.NewRoomUsecase(), hub: hub}
+	return &ChatMessageBroker{uscs: usecase.NewChatRoomUsecase(), hub: hub}
 }
 
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {

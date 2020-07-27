@@ -5,19 +5,19 @@ import (
 	"github.com/tmpchat/tmpchat/message_broker/repository"
 )
 
-type RoomUsecase interface {
+type ChatRoomUsecase interface {
 	AddMessage(roomID string, message *domain.ChatMessage) (*domain.ChatMessage, error)
 }
 
-type roomInteractor struct {
+type chatRoomInteractor struct {
 	repo repository.ChatRoomRepository
 }
 
-func NewRoomUsecase() RoomUsecase {
-	return roomInteractor{repo: repository.NewChatRoomRepository()}
+func NewChatRoomUsecase() ChatRoomUsecase {
+	return chatRoomInteractor{repo: repository.NewChatRoomRepository()}
 }
 
-func (itr roomInteractor) AddMessage(roomID string, message *domain.ChatMessage) (*domain.ChatMessage, error) {
+func (itr chatRoomInteractor) AddMessage(roomID string, message *domain.ChatMessage) (*domain.ChatMessage, error) {
 	room, err := itr.repo.Find(roomID)
 	if err != nil {
 		// TODO: 本来はここで Create せず、エラーとすべき。
