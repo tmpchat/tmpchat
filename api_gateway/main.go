@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/tmpchat/tmpchat/api_gateway/controller"
 )
 
-func  main()  {
+func main() {
 	// routing
 	con := controller.NewRoomController()
 	http.HandleFunc("/room/create", con.Create)
@@ -16,7 +17,11 @@ func  main()  {
 	http.HandleFunc("/room/update-title", con.UpdateTitle)
 
 	// listen
-	log.Fatal(http.ListenAndServe(":8888", nil))
+	apiGatewayHost := os.Getenv("API_GATEAY_HOST")
+	if apiGatewayHost == "" {
+		apiGatewayHost = "127.0.0.1:8888"
+	}
+	log.Fatal(http.ListenAndServe(apiGatewayHost, nil))
 
 	fmt.Println("Done")
 }
