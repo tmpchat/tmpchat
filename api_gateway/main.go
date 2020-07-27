@@ -17,7 +17,7 @@ func main() {
 	http.HandleFunc("/room/update-title", con.UpdateTitle)
 
 	// listen
-	apiGatewayHost := os.Getenv("API_GATEAY_HOST")
+	apiGatewayHost := os.Getenv("API_GATEWAY_HOST")
 	if apiGatewayHost == "" {
 		apiGatewayHost = "127.0.0.1:8888"
 	}
