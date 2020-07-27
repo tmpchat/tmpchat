@@ -21,8 +21,8 @@ func NewRoomController() RoomController {
 
 func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	// TODO: Recieve title
-	uu := usecase.NewRoomUsecase()
-	uuid := uu.CreateUUID()
+	uscs := usecase.NewRoomUsecase()
+	uuid := uscs.CreateUUID()
 	fmt.Println(uuid)
 	// TODO: Create MessageBroker
 	// TODO: Insert to DB
