@@ -4,35 +4,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
-	"github.com/go-redis/redis"
 	"github.com/tmpchat/tmpchat/message_broker/broker"
-	"github.com/tmpchat/tmpchat/message_broker/repository"
 )
 
 func main() {
-	redisHost := os.Getenv("REDIS_HOST")
-	if redisHost == "" {
-		redisHost = "localhost:6379"
-	}
-	client := redis.NewClient(&redis.Options{
-		Addr:     redisHost,
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-
-	pong, err := client.Ping().Result()
-	fmt.Println(pong, err)
-	if err != nil {
-		fmt.Println("redis connection error")
-		return
-	}
-
-	repo := repository.NewChatRoomRepository(client)
 	hub := broker.NewClientHub()
 	go hub.Run()
-	broker := broker.NewChatMessageBroker(repo, hub)
+	broker := broker.NewChatMessageBroker(hub)
 	http.HandleFunc("/broker", broker.PostMessage)
 	log.Fatal(http.ListenAndServe(":8081", nil))
 

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"bytes"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -21,8 +22,23 @@ type chatRoomRepository struct {
 }
 
 // NewChatRoomRepository create ChatMessageRepository
-func NewChatRoomRepository(client *redis.Client) ChatRoomRepository {
-	return chatRoomRepository{client}
+func NewChatRoomRepository() ChatRoomRepository {
+	return chatRoomRepository{newRedisClient()}
+}
+
+// TODO: config の整理、他の repository でも使用する可能性があるので別のファイルに分ける。
+func newRedisClient() *redis.Client {
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
+	client := redis.NewClient(&redis.Options{
+		Addr:     redisHost,
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	return client
 }
 
 func (c chatRoomRepository) Create(roomID string) (*domain.ChatRoom, error) {

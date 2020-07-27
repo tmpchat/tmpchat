@@ -5,22 +5,23 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 
 	"github.com/tmpchat/tmpchat/message_broker/domain"
-	"github.com/tmpchat/tmpchat/message_broker/repository"
+	"github.com/tmpchat/tmpchat/message_broker/usecase"
 )
 
 // TODO: change local scope
 var upgrader = websocket.Upgrader{} // use default options
 
 type ChatMessageBroker struct {
-	repo repository.ChatRoomRepository
+	uscs usecase.RoomUsecase
 	hub  *ClientHub
 }
 
-func NewChatMessageBroker(repo repository.ChatRoomRepository, hub *ClientHub) *ChatMessageBroker {
-	return &ChatMessageBroker{repo: repo, hub: hub}
+func NewChatMessageBroker(hub *ClientHub) *ChatMessageBroker {
+	return &ChatMessageBroker{uscs: usecase.NewRoomUsecase(), hub: hub}
 }
 
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
@@ -41,25 +42,16 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 		}
 		log.Printf("recv: %s", message)
 
-		// TODO: create interctor? usecase? layer
 		roomID := "example_room_id"
-		room, err := bro.repo.Find(roomID)
+		chatmessage := &domain.ChatMessage{ID: uuid.New().String(), Value: string(message), CreatedAt: time.Now()}
+		res, err := bro.uscs.AddMessage(roomID, chatmessage)
 		if err != nil {
-			room, err = bro.repo.Create(roomID)
-			if err != nil {
-				log.Println("create failed.")
-			}
+			log.Printf(`FAIL add message: %#v.`, err)
+			// TODO: error を client に伝える術がないので、エラーを握り潰してる
+			continue
 		}
 
-		chatmessage := domain.ChatMessage{ID: "id", Value: string(message), CreatedAt: time.Now()}
-		// add message
-		err = bro.repo.AddMessage(room.ID, chatmessage)
-		if err != nil {
-			log.Println("add failed.")
-			break
-		}
-
-		bro.hub.broadcast <- message
+		bro.hub.broadcast <- []byte(res.Value)
 	}
 }
 
