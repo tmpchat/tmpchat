@@ -29,7 +29,7 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	// TODO: Create MessageBroker
 	// TODO: Insert to DB
 	now := time.Now()
-	room := domain.RoomEntity{ID: "default", UUID: "XXXXXXXX", Title: "Awesome Golang", CreatedAt: now, UpdatedAt: now, DeletedAt: now}
+	room := domain.RoomEntity{ID: 2, UUID: "XXXXXXXX", Title: "Awesome Golang", CreatedAt: now, UpdatedAt: now, DeletedAt: now}
 	ins := uscs.InsertDB(&room)
 	fmt.Println("ins: ", ins)
 	// TODO: Response to Client

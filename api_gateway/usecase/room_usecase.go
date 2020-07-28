@@ -26,13 +26,6 @@ func (r roomUsecase) CreateUUID() google_uuid.UUID {
 
 func (r roomUsecase) InsertDB(*domain.RoomEntity) error {
 	raw := domain.RoomEntity{}
-	// id := raw.ID
-	// uuid := raw.UUID
-	// title := raw.Title
-	// createdAt := raw.CreatedAt
-	// updatedAt := raw.UpdatedAt
-	// deletedAt := raw.DeletedAt
-	fmt.Println("raw: ", raw)
 
 	db, err := sql.Open("mysql", "root:mypassword@tcp(0.0.0.0:3306)/tmpchat")
 	if err != nil {
@@ -52,7 +45,10 @@ func (r roomUsecase) InsertDB(*domain.RoomEntity) error {
 	fmt.Println("uscs_ins: ", ins)
 	// ins.Exec(id, uuid, title, createdAt, updatedAt, deletedAt)
 	fmt.Println("uscs_err: ", err)
-	ins.Exec(2, "6b2dfe65-22c2-4cdc-ad73-ef09b0e1ca79", "Awesome Go", "", "", "")
+
+	exec, err := ins.Exec(raw.ID, raw.UUID, raw.Title, raw.CreatedAt, raw.UpdatedAt, raw.DeletedAt)
+	fmt.Println(err)
+	fmt.Println(exec)
 
 	return nil
 }
