@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 	google_uuid "github.com/google/uuid"
@@ -25,17 +26,33 @@ func (r roomUsecase) CreateUUID() google_uuid.UUID {
 
 func (r roomUsecase) InsertDB(*domain.RoomEntity) error {
 	raw := domain.RoomEntity{}
+	// id := raw.ID
+	// uuid := raw.UUID
+	// title := raw.Title
+	// createdAt := raw.CreatedAt
+	// updatedAt := raw.UpdatedAt
+	// deletedAt := raw.DeletedAt
+	fmt.Println("raw: ", raw)
+
 	db, err := sql.Open("mysql", "root:mypassword@tcp(0.0.0.0:3306)/tmpchat")
 	if err != nil {
 		return err
 	}
 	defer db.Close()
+	// ins, err := db.Query("insert into room values ( 1, '6b2dfe65-22c2-4cdc-ad73-ef09b0e1ca79', 'Awesome Golang', default, default, default )")
+	// if err != nil {
+	// 	return err
+	// }
+	// defer ins.Close()
 
-	ins, err := db.Prepare("insert into room(id, external_id, title, created_at, update_at, deleted_at) value (?,?,?,?,?,?)")
+	ins, err := db.Prepare("insert into room values (?,?,?,?,?,?)")
 	if err != nil {
 		return err
 	}
-	ins.Exec(raw)
+	fmt.Println("uscs_ins: ", ins)
+	// ins.Exec(id, uuid, title, createdAt, updatedAt, deletedAt)
+	fmt.Println("uscs_err: ", err)
+	ins.Exec(2, "6b2dfe65-22c2-4cdc-ad73-ef09b0e1ca79", "Awesome Go", "", "", "")
 
 	return nil
 }
