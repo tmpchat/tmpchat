@@ -30,7 +30,7 @@ func (r roomUsecase) InsertDB(raw domain.RoomEntity) error {
 	}
 	defer db.Close()
 
-	ins, err := db.Query("insert into room values ( default, ?, ?, default, default, ? )", raw.UUID, raw.Title, nil)
+	ins, err := db.Query("insert into room values (default, ?, ?, default, default, ?)", raw.UUID, raw.Title, nil)
 	if err != nil {
 		return err
 	}
