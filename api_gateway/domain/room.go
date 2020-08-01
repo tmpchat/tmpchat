@@ -1,6 +1,6 @@
 package domain
 
-type CreateRoomEntity struct {
+type CreateRoomRequest struct {
 	UUID  string
 	Title string
 }
