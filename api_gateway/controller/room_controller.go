@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/tmpchat/tmpchat/api_gateway/domain"
 	"github.com/tmpchat/tmpchat/api_gateway/usecase"
@@ -28,8 +27,7 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(uuid)
 	// TODO: Create MessageBroker
 	// TODO: Insert to DB
-	now := time.Now()
-	room := domain.RoomEntity{ID: 2, UUID: "XXXXXXXX", Title: "Awesome Golang", CreatedAt: now, UpdatedAt: now, DeletedAt: now}
+	room := domain.CreateRoomEntity{UUID: "XXXXXXXX", Title: "Awesome Golang"}
 	ins := uscs.InsertDB(room)
 	fmt.Println("ins: ", ins)
 	// TODO: Response to Client

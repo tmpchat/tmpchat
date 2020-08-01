@@ -11,7 +11,7 @@ import (
 
 type RoomUsecase interface {
 	CreateUUID() google_uuid.UUID
-	InsertDB(raw domain.RoomEntity) error
+	InsertDB(raw domain.CreateRoomEntity) error
 	DBConn() (db *sql.DB)
 }
 
@@ -38,7 +38,7 @@ func (r roomUsecase) DBConn() (db *sql.DB) {
 	return db
 }
 
-func (r roomUsecase) InsertDB(raw domain.RoomEntity) error {
+func (r roomUsecase) InsertDB(raw domain.CreateRoomEntity) error {
 	db := r.DBConn()
 	ins, err := db.Query("insert into room values (default, ?, ?, default, default, ?)", raw.UUID, raw.Title, nil)
 	if err != nil {
