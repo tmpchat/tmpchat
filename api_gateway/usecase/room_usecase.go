@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"database/sql"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	google_uuid "github.com/google/uuid"
@@ -26,12 +27,11 @@ func (r roomUsecase) CreateUUID() google_uuid.UUID {
 
 func (r roomUsecase) DBConn() (db *sql.DB) {
 	driver := "mysql"
-	user := "root"
-	password := "mypassword"
-	host := "0.0.0.0"
-	dbname := "tmpchat"
+	user := os.Getenv("MYSQL_USER")
+	password := os.Getenv("MYSQL_PASSWORD")
+	host := os.Getenv("MYSQL_HOST")
+	dbname := os.Getenv("MYSQL_DATABASE")
 	db, err := sql.Open(driver, user+":"+password+"@"+"("+host+")"+"/"+dbname)
-	//	"root:mypassword@tcp(0.0.0.0:3306)/tmpchat")
 	if err != nil {
 		panic(err.Error())
 	}
