@@ -24,6 +24,11 @@ func NewChatMessageBroker(hub *ClientHub) *ChatMessageBroker {
 	return &ChatMessageBroker{uscs: usecase.NewChatRoomUsecase(), hub: hub}
 }
 
+func (bro ChatMessageBroker) CreateRoom(w http.ResponseWriter, r *http.Request) {
+	roomID := "xxxx-xxxx-xxxx-xxxx"
+	bro.uscs.CreateRoom(roomID)
+}
+
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	c, err := upgrader.Upgrade(w, r, nil)

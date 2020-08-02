@@ -6,6 +6,7 @@ import (
 )
 
 type ChatRoomUsecase interface {
+	CreateRoom(roomID string) error
 	AddMessage(roomID string, message *domain.ChatMessage) (*domain.ChatMessage, error)
 }
 
@@ -15,6 +16,11 @@ type chatRoomInteractor struct {
 
 func NewChatRoomUsecase() ChatRoomUsecase {
 	return chatRoomInteractor{repo: repository.NewChatRoomRepository()}
+}
+
+func (itr chatRoomInteractor) CreateRoom(roomID string) error {
+	_, err := itr.repo.Create(roomID)
+	return err
 }
 
 func (itr chatRoomInteractor) AddMessage(roomID string, message *domain.ChatMessage) (*domain.ChatMessage, error) {
