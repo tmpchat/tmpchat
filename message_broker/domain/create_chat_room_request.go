@@ -15,5 +15,5 @@ func DecodeCreateChatRoomRequest(buf []byte) (*CraeteChatRoomRequest, error) {
 	  return nil, err
 	}
 
-	return nil, err
+	return req, nil
 }
