@@ -27,7 +27,7 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(uuid)
 	// TODO: Create MessageBroker
 	// TODO: Insert to DB
-	room := domain.CreateRoomRequest{UUID: "XXXXXXXX", Title: "Awesome Golang"}
+	room := domain.CreateRoomRequest{UUID: uuid.String(), Title: "Awesome Golang"}
 	ins := uscs.InsertDB(room)
 	fmt.Println("ins: ", ins)
 	// TODO: Response RoomEntity to Client
