@@ -40,11 +40,7 @@ func (bro ChatMessageBroker) CreateRoom(w http.ResponseWriter, r *http.Request) 
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	// debug cod
-	debugBody := []byte(`{"id":"xxxx-xxxx-xxxx-xxxx"}`)
-	log.Print(string(body))
-	log.Print(string(debugBody))
-	req, err := domain.DecodeCreateChatRoomRequest(debugBody)
+	req, err := domain.DecodeCreateChatRoomRequest(body)
 	if err != nil {
 		log.Print("decode request error")
 		log.Print(err.Error())
