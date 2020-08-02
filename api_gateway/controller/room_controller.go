@@ -30,7 +30,7 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	room := domain.CreateRoomRequest{UUID: "XXXXXXXX", Title: "Awesome Golang"}
 	ins := uscs.InsertDB(room)
 	fmt.Println("ins: ", ins)
-	// TODO: Response to Client
+	// TODO: Response RoomEntity to Client
 	fmt.Printf(`RoomController.Create: %#v, %#v`, w, r)
 }
 
