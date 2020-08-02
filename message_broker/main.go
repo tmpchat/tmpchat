@@ -13,6 +13,7 @@ func main() {
 	go hub.Run()
 	broker := broker.NewChatMessageBroker(hub)
 	http.HandleFunc("/broker", broker.PostMessage)
+	http.HandleFunc("/room", broker.CreateRoom)
 	log.Fatal(http.ListenAndServe(":8081", nil))
 
 	fmt.Println("Done")

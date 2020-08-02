@@ -25,8 +25,27 @@ func NewChatMessageBroker(hub *ClientHub) *ChatMessageBroker {
 }
 
 func (bro ChatMessageBroker) CreateRoom(w http.ResponseWriter, r *http.Request) {
-	roomID := "xxxx-xxxx-xxxx-xxxx"
-	bro.uscs.CreateRoom(roomID)
+	// TODO: http
+	body := make([]byte, length)
+	length, err = req.Body.Read(body)
+	if err != nil && err != io.EOF {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	req, err := domain.DecodeCreateChatRoomRequest(requestbody)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := bro.uscs.CreateRoom(req.ID)
+	// TODO: http response
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
