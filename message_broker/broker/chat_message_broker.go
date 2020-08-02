@@ -3,6 +3,8 @@ package broker
 import (
 	"log"
 	"net/http"
+	"io"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -26,19 +28,31 @@ func NewChatMessageBroker(hub *ClientHub) *ChatMessageBroker {
 
 func (bro ChatMessageBroker) CreateRoom(w http.ResponseWriter, r *http.Request) {
 	// TODO: http
-	body := make([]byte, length)
-	length, err = req.Body.Read(body)
-	if err != nil && err != io.EOF {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	req, err := domain.DecodeCreateChatRoomRequest(requestbody)
+	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	body := make([]byte, length)
+	length, err = r.Body.Read(body)
+	if err != nil && err != io.EOF {
+		log.Print("read body error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	// debug cod
+	debugBody := []byte(`{"id":"xxxx-xxxx-xxxx-xxxx"}`)
+	log.Print(string(body))
+	log.Print(string(debugBody))
+	req, err := domain.DecodeCreateChatRoomRequest(debugBody)
+	if err != nil {
+		log.Print("decode request error")
+		log.Print(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
-	err := bro.uscs.CreateRoom(req.ID)
+	err = bro.uscs.CreateRoom(req.ID)
 	// TODO: http response
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

@@ -9,11 +9,11 @@ type CraeteChatRoomRequest struct {
 }
 
 func DecodeCreateChatRoomRequest(buf []byte) (*CraeteChatRoomRequest, error) {
-	var req *CraeteChatRoomRequest
-	err := json.Unmarshal(buf[:], req)
+	var req CraeteChatRoomRequest
+	err := json.Unmarshal(buf, &req)
 	if err != nil {
 	  return nil, err
 	}
 
-	return req, nil
+	return &req, nil
 }
