@@ -24,7 +24,6 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	// TODO: Recieve title
 	uscs := usecase.NewRoomUsecase()
 	uuid := uscs.CreateUUID()
-	fmt.Println(uuid)
 	room := domain.CreateRoomRequest{UUID: uuid.String(), Title: "Awesome Golang"}
 	err := uscs.Create(room)
 	if err != nil {

@@ -50,10 +50,11 @@ func (r roomRepository) Create(room domain.CreateRoomRequest) error {
 func (r roomRepository) Find(id string) (*domain.RoomEntity, error) {
 	var row domain.RoomEntity
 	db := r.DBConn()
-	err := db.QueryRow("select * from room where external_id = ?", id).Scan(&row.ID, &row.UUID, &row.Title, &row.CreatedAt, &row.UpdatedAt, &row.DeletedAt)
+	err := db.QueryRow("select * from room where external_id = ? and deleted_at is null", id).Scan(&row.ID, &row.UUID, &row.Title, &row.CreatedAt, &row.UpdatedAt, &row.DeletedAt)
 	if err != nil {
 		return nil, err
 	}
+	// TODO: name "created_at": unsupported Scan, storing driver.Value type []uint8 into type *time.Time
 	defer db.Close()
 
 	return &row, nil

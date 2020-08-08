@@ -25,12 +25,6 @@ func NewRoomUsecase() RoomUsecase {
 
 // TODO: Response RoomEntity to Client
 func (r roomUsecase) Create(raw domain.CreateRoomRequest) error {
-	// TODO: imple exists method
-	// TODO: if room is not exists, create room
-	if _, err := r.roomRepo.Find(raw.UUID); err != nil {
-		return err
-	}
-
 	err := r.roomRepo.Create(raw)
 	if err != nil {
 		return err
