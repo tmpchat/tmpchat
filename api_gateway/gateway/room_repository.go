@@ -11,7 +11,7 @@ import (
 
 type RoomRepository interface {
 	DBConn() (db *sql.DB)
-	Create(room domain.RoomEntity) error
+	Create(room domain.CreateRoomRequest) error
 	Find(id string) (*domain.RoomEntity, error)
 	List() ([]domain.RoomEntity, error)
 	UpdateTitle(id, title string) (domain.RoomEntity, error)
@@ -60,9 +60,9 @@ func (r roomRepository) Find(id string) (*domain.RoomEntity, error) {
 }
 
 func (r roomRepository) List() ([]domain.RoomEntity, error) {
-
+	panic("not impl")
 }
 
 func (r roomRepository) UpdateTitle(id, title string) (domain.RoomEntity, error) {
-
+	panic("not impl")
 }

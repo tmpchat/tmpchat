@@ -7,7 +7,7 @@ import (
 )
 
 type RoomUsecase interface {
-	CreateRoom(raw domain.CreateRoomRequest) error
+	Create(raw domain.CreateRoomRequest) error
 	CreateUUID() google_uuid.UUID
 }
 
@@ -17,20 +17,31 @@ type roomUsecase struct {
 }
 
 func NewRoomUsecase() RoomUsecase {
-	return roomUsecase{roomRepo, mbRepo}
+	return roomUsecase{
+		roomRepo: gateway.NewRoomRepository(),
+		mbRepo:   gateway.NewMessageBrokerRepository(),
+	}
 }
 
-func (r roomUsecase) CreateRoom(raw domain.CreateRoomRequest) {
-	// TODO: check room exists
-	room_exists, err := r.roomRepo.Find(room) //
+// TODO: Response RoomEntity to Client
+func (r roomUsecase) Create(raw domain.CreateRoomRequest) error {
+	// TODO: imple exists method
 	// TODO: if room is not exists, create room
+	if _, err := r.roomRepo.Find(raw.UUID); err != nil {
+		return err
+	}
 
-	err := r.roomRepo.Create(room)
+	err := r.roomRepo.Create(raw)
 	if err != nil {
 		return err
 	}
-	// TODO: Response RoomEntity to Client
-	fmt.Printf(`RoomController.Create: %#v, %#v`, w, r)
+
+	// TODO: Create MessageBroker
+	if err := r.mbRepo.CreateRoom(raw); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r roomUsecase) CreateUUID() google_uuid.UUID {

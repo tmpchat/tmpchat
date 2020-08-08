@@ -25,11 +25,12 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	uscs := usecase.NewRoomUsecase()
 	uuid := uscs.CreateUUID()
 	fmt.Println(uuid)
-	// TODO: Create MessageBroker
-	// TODO: Insert to DB
 	room := domain.CreateRoomRequest{UUID: uuid.String(), Title: "Awesome Golang"}
-	ins := uscs.InsertDB(room)
-	fmt.Println("ins: ", ins)
+	err := uscs.Create(room)
+	if err != nil {
+		fmt.Println("err: ", err)
+		// TODO: HTTP response 400
+	}
 	// TODO: Response RoomEntity to Client
 	fmt.Printf(`RoomController.Create: %#v, %#v`, w, r)
 }
