@@ -10,7 +10,7 @@ type RoomEntity struct {
 	Title     string
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt time.Time
+	DeletedAt *time.Time
 }
 
 type CreateRoomRequest struct {
