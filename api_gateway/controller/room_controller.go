@@ -36,7 +36,16 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) Find(w http.ResponseWriter, r *http.Request) {
+	uscs := usecase.NewRoomUsecase()
+	uuid := "9f0c3721-cc15-451c-8700-d5d5af0c677f"
+	row, err := uscs.Find(uuid)
+	if err != nil {
+		fmt.Println("err: ", err)
+		// TODO: HTTP response 400
+	}
+	// TODO: Response RoomEntity to Client
 	fmt.Printf(`RoomController.List: %#v, %#v`, w, r)
+	fmt.Println("RoomEntity: ", row)
 }
 
 func (rc roomController) List(w http.ResponseWriter, r *http.Request) {
