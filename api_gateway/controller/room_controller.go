@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -43,9 +44,15 @@ func (rc roomController) Find(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("err: ", err)
 		// TODO: HTTP response 400
 	}
-	// TODO: Response RoomEntity to Client
 	fmt.Printf(`RoomController.List: %#v, %#v`, w, r)
-	fmt.Println("RoomEntity: ", row)
+
+	res, err := json.Marshal(row)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(res)
 }
 
 func (rc roomController) List(w http.ResponseWriter, r *http.Request) {
