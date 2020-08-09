@@ -29,7 +29,7 @@ func (r roomRepository) DBConn() (db *sql.DB) {
 	password := os.Getenv("MYSQL_PASSWORD")
 	host := os.Getenv("MYSQL_HOST")
 	dbname := os.Getenv("MYSQL_DATABASE")
-	db, err := sql.Open(driver, user+":"+password+"@"+"("+host+")"+"/"+dbname)
+	db, err := sql.Open(driver, user+":"+password+"@"+"("+host+")"+"/"+dbname+"?parseTime=true")
 	if err != nil {
 		panic(err.Error())
 	}
