@@ -13,6 +13,7 @@ func main() {
 	// routing
 	con := controller.NewRoomController()
 	http.HandleFunc("/room/create", con.Create)
+	http.HandleFunc("/room/find", con.Find)
 	http.HandleFunc("/room/list", con.List)
 	http.HandleFunc("/room/update-title", con.UpdateTitle)
 

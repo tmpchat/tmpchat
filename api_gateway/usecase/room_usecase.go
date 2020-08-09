@@ -8,6 +8,7 @@ import (
 
 type RoomUsecase interface {
 	Create(raw domain.CreateRoomRequest) error
+	Find(raw domain.RoomEntity) error
 	CreateUUID() google_uuid.UUID
 }
 
@@ -32,6 +33,15 @@ func (r roomUsecase) Create(raw domain.CreateRoomRequest) error {
 
 	// TODO: Create MessageBroker
 	if err := r.mbRepo.CreateRoom(raw); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r roomUsecase) Find(raw domain.RoomEntity) error {
+	_, err := r.roomRepo.Find(raw.UUID)
+	if err != nil {
 		return err
 	}
 
