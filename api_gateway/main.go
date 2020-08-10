@@ -15,10 +15,10 @@ func main() {
 	// routing
 	router := mux.NewRouter()
 	con := controller.NewRoomController()
-	router.HandleFunc("/room/create", con.Create)
-	router.HandleFunc("/room/find", con.Find)
-	router.HandleFunc("/room/list", con.List)
-	router.HandleFunc("/room/update-title", con.UpdateTitle)
+	router.HandleFunc("/rooms", con.Create).Methods("POST")
+	router.HandleFunc("/rooms", con.List).Methods("GET")
+	router.HandleFunc("/rooms/{id}", con.Find).Methods("GET")
+	router.HandleFunc("/rooms/titles", con.UpdateTitle).Methods("PUT")
 
 	// listen
 	apiGatewayHost := os.Getenv("API_GATEWAY_HOST")
