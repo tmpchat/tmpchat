@@ -14,6 +14,6 @@ type RoomEntity struct {
 }
 
 type CreateRoomRequest struct {
-	UUID  string `json:"uuid"`
+	UUID  string `json:"-"`
 	Title string `json:"title"`
 }

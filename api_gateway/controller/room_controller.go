@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -25,14 +26,29 @@ func NewRoomController() RoomController {
 }
 
 func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
-	// TODO: Recieve title
 	uscs := usecase.NewRoomUsecase()
 	uuid := uscs.CreateUUID()
-	room := domain.CreateRoomRequest{UUID: uuid.String(), Title: "Awesome Golang"}
-	err := uscs.Create(room)
+
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Println("err: ", err)
-		// TODO: HTTP response 400
+		http.Error(w, "please specify title", http.StatusBadRequest)
+		return
+	}
+
+	var request domain.CreateRoomRequest
+	if err := json.Unmarshal(body, &request); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify title", http.StatusBadRequest)
+		return
+	}
+	request.UUID = uuid.String()
+
+	if err := uscs.Create(request); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "Please retry", http.StatusInternalServerError)
+		return
 	}
 	// TODO: Response RoomEntity to Client
 	fmt.Printf(`RoomController.Create: %#v, %#v`, w, r)
