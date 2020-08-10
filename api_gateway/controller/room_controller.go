@@ -27,7 +27,6 @@ func NewRoomController() RoomController {
 
 func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 	uscs := usecase.NewRoomUsecase()
-	uuid := uscs.CreateUUID()
 
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
@@ -37,13 +36,12 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var request domain.CreateRoomRequest
+	request := domain.NewCreateRoomRequest()
 	if err := json.Unmarshal(body, &request); err != nil {
 		fmt.Println("err: ", err)
 		http.Error(w, "please specify title", http.StatusBadRequest)
 		return
 	}
-	request.UUID = uuid.String()
 
 	if err := uscs.Create(request); err != nil {
 		fmt.Println("err: ", err)

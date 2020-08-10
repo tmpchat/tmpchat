@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	google_uuid "github.com/google/uuid"
 	"github.com/tmpchat/tmpchat/api_gateway/domain"
 	"github.com/tmpchat/tmpchat/api_gateway/gateway"
 )
@@ -9,7 +8,6 @@ import (
 type RoomUsecase interface {
 	Create(raw domain.CreateRoomRequest) error
 	Find(id string) (*domain.RoomEntity, error)
-	CreateUUID() google_uuid.UUID
 }
 
 type roomUsecase struct {
@@ -46,8 +44,4 @@ func (r roomUsecase) Find(id string) (*domain.RoomEntity, error) {
 	}
 
 	return row, err
-}
-
-func (r roomUsecase) CreateUUID() google_uuid.UUID {
-	return google_uuid.UUID(google_uuid.New())
 }
