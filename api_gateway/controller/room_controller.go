@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"github.com/tmpchat/tmpchat/api_gateway/domain"
 	"github.com/tmpchat/tmpchat/api_gateway/usecase"
 )
@@ -37,12 +39,18 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) Find(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if _, exists := vars["id"]; !exists {
+		http.Error(w, "please specify room id", http.StatusBadRequest)
+		return
+	}
+	uuid := vars["id"]
 	uscs := usecase.NewRoomUsecase()
-	uuid := "9f0c3721-cc15-451c-8700-d5d5af0c677f"
 	row, err := uscs.Find(uuid)
 	if err != nil {
 		fmt.Println("err: ", err)
-		// TODO: HTTP response 400
+		http.Error(w, "room is not found", http.StatusNotFound)
+		return
 	}
 	fmt.Printf(`RoomController.List: %#v, %#v`, w, r)
 
