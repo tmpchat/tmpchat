@@ -3,6 +3,7 @@ package domain
 import (
 	"time"
 
+	validator "github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 )
 
@@ -17,9 +18,13 @@ type RoomEntity struct {
 
 type CreateRoomRequest struct {
 	UUID  string `json:"-"`
-	Title string `json:"title"`
+	Title string `validate:"required" json:"title"`
 }
 
 func NewCreateRoomRequest() CreateRoomRequest {
 	return CreateRoomRequest{UUID: uuid.New().String()}
+}
+
+func (req CreateRoomRequest) Validate() error {
+	return validator.New().Struct(req)
 }

@@ -11,7 +11,7 @@ import (
 
 type RoomRepository interface {
 	DBConn() (db *sql.DB)
-	Create(room domain.CreateRoomRequest) error
+	Create(room domain.CreateRoomRequest) (*domain.RoomEntity, error)
 	Find(id string) (*domain.RoomEntity, error)
 	List() ([]domain.RoomEntity, error)
 	UpdateTitle(id, title string) (domain.RoomEntity, error)
@@ -36,15 +36,20 @@ func (r roomRepository) DBConn() (db *sql.DB) {
 	return db
 }
 
-func (r roomRepository) Create(room domain.CreateRoomRequest) error {
+func (r roomRepository) Create(room domain.CreateRoomRequest) (*domain.RoomEntity, error) {
 	db := r.DBConn()
 	_, err := db.Query("insert into room values (default, ?, ?, default, default, ?)", room.UUID, room.Title, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer db.Close()
 
-	return err
+	result, err := r.Find(room.UUID)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (r roomRepository) Find(id string) (*domain.RoomEntity, error) {

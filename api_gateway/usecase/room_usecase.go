@@ -6,7 +6,7 @@ import (
 )
 
 type RoomUsecase interface {
-	Create(raw domain.CreateRoomRequest) error
+	Create(req domain.CreateRoomRequest) (*domain.RoomEntity, error)
 	Find(id string) (*domain.RoomEntity, error)
 }
 
@@ -23,25 +23,25 @@ func NewRoomUsecase() RoomUsecase {
 }
 
 // TODO: Response RoomEntity to Client
-func (r roomUsecase) Create(raw domain.CreateRoomRequest) error {
-	err := r.roomRepo.Create(raw)
-	if err != nil {
-		return err
-	}
-
-	// TODO: Create MessageBroker
-	if err := r.mbRepo.CreateRoom(raw); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r roomUsecase) Find(id string) (*domain.RoomEntity, error) {
-	row, err := r.roomRepo.Find(id)
+func (r roomUsecase) Create(req domain.CreateRoomRequest) (*domain.RoomEntity, error) {
+	room, err := r.roomRepo.Create(req)
 	if err != nil {
 		return nil, err
 	}
 
-	return row, err
+	// TODO: Create MessageBroker
+	// if err := r.mbRepo.CreateRoom(req); err != nil {
+	// 	return nil, err
+	// }
+
+	return room, nil
+}
+
+func (r roomUsecase) Find(id string) (*domain.RoomEntity, error) {
+	room, err := r.roomRepo.Find(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return room, err
 }

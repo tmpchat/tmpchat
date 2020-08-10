@@ -43,13 +43,26 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := uscs.Create(request); err != nil {
+	if err := request.Validate(); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify title", http.StatusBadRequest)
+		return
+	}
+
+	response, err := uscs.Create(request)
+	if err != nil {
 		fmt.Println("err: ", err)
 		http.Error(w, "Please retry", http.StatusInternalServerError)
 		return
 	}
-	// TODO: Response RoomEntity to Client
-	fmt.Printf(`RoomController.Create: %#v, %#v`, w, r)
+
+	res, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Write(res)
 }
 
 func (rc roomController) Find(w http.ResponseWriter, r *http.Request) {
