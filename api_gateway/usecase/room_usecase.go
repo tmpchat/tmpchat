@@ -30,9 +30,9 @@ func (r roomUsecase) Create(req domain.CreateRoomRequest) (*domain.RoomEntity, e
 	}
 
 	// TODO: Create MessageBroker
-	// if err := r.mbRepo.CreateRoom(req); err != nil {
-	// 	return nil, err
-	// }
+	if err := r.mbRepo.CreateRoom(req); err != nil {
+		return nil, err
+	}
 
 	return room, nil
 }

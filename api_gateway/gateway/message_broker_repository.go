@@ -1,6 +1,13 @@
 package gateway
 
-import "github.com/tmpchat/tmpchat/api_gateway/domain"
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/tmpchat/tmpchat/api_gateway/domain"
+)
 
 type MessageBrokerRepository interface {
 	CreateRoom(room domain.CreateRoomRequest) error
@@ -14,5 +21,14 @@ func NewMessageBrokerRepository() MessageBrokerRepository {
 }
 
 func (r messageBrokerRepository) CreateRoom(room domain.CreateRoomRequest) error {
-	panic("not impl")
+	request, err := json.Marshal(domain.CraeteChatRoomRequest{ID: room.UUID})
+
+	res, err := http.Post("http://localhost:8081/room", "application/json", bytes.NewBuffer(request))
+	if err != nil {
+		// TODO: check StatusCode?
+		return err
+	}
+	fmt.Printf("[status] %d\n", res.StatusCode)
+
+	return nil
 }
