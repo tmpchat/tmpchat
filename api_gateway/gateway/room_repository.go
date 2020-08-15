@@ -17,6 +17,7 @@ type RoomRepository interface {
 	UpdateTitle(id, title string) (domain.RoomEntity, error)
 }
 
+// TODO: Isn't bad performance to call DBConn every time the method is called?
 type roomRepository struct{}
 
 func NewRoomRepository() RoomRepository {
@@ -31,6 +32,7 @@ func (r roomRepository) DBConn() (db *sql.DB) {
 	dbname := os.Getenv("MYSQL_DATABASE")
 	db, err := sql.Open(driver, user+":"+password+"@"+"("+host+")"+"/"+dbname+"?parseTime=true")
 	if err != nil {
+		// TODO: remove panic
 		panic(err.Error())
 	}
 	return db
