@@ -59,7 +59,6 @@ func (r roomRepository) Find(id string) (*domain.RoomEntity, error) {
 	if err != nil {
 		return nil, err
 	}
-	// TODO: name "created_at": unsupported Scan, storing driver.Value type []uint8 into type *time.Time
 	defer db.Close()
 
 	return &row, nil
