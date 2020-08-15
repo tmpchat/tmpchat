@@ -29,7 +29,7 @@ func (r roomUsecase) Create(req domain.CreateRoomRequest) (*domain.RoomEntity, e
 		return nil, err
 	}
 
-	// TODO: Create MessageBroker
+	// TODO: Deactivate MySQL record when failed call MessageBroker API.
 	if err := r.mbRepo.CreateRoom(req); err != nil {
 		return nil, err
 	}
