@@ -13,7 +13,7 @@ type RoomRepository interface {
 	DBConn() (db *sql.DB)
 	Create(room domain.CreateRoomRequest) (*domain.RoomEntity, error)
 	Find(id string) (*domain.RoomEntity, error)
-	List() ([]domain.RoomEntity, error)
+	List() ([]*domain.RoomEntity, error)
 	UpdateTitle(id, title string) (domain.RoomEntity, error)
 }
 
@@ -66,8 +66,30 @@ func (r roomRepository) Find(id string) (*domain.RoomEntity, error) {
 	return &row, nil
 }
 
-func (r roomRepository) List() ([]domain.RoomEntity, error) {
-	panic("not impl")
+func (r roomRepository) List() ([]*domain.RoomEntity, error) {
+	db := r.DBConn()
+	// Execute the query
+	rows, err := db.Query("select * from room where deleted_at is null")
+	if err != nil {
+		return nil, err
+	}
+
+	var rooms []*domain.RoomEntity
+	// Fetch rows
+	for rows.Next() {
+		var room domain.RoomEntity
+		err = rows.Scan(&room.ID, &room.UUID, &room.Title, &room.CreatedAt, &room.UpdatedAt, &room.DeletedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		rooms = append(rooms, &room)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return rooms, nil
 }
 
 func (r roomRepository) UpdateTitle(id, title string) (domain.RoomEntity, error) {

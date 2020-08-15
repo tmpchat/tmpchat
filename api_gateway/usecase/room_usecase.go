@@ -8,6 +8,7 @@ import (
 type RoomUsecase interface {
 	Create(req domain.CreateRoomRequest) (*domain.RoomEntity, error)
 	Find(id string) (*domain.RoomEntity, error)
+	List() ([]*domain.RoomEntity, error)
 }
 
 type roomUsecase struct {
@@ -43,5 +44,14 @@ func (r roomUsecase) Find(id string) (*domain.RoomEntity, error) {
 		return nil, err
 	}
 
-	return room, err
+	return room, nil
+}
+
+func (r roomUsecase) List() ([]*domain.RoomEntity, error) {
+	rooms, err := r.roomRepo.List()
+	if err != nil {
+		return nil, err
+	}
+
+	return rooms, nil
 }

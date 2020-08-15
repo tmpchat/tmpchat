@@ -91,7 +91,20 @@ func (rc roomController) Find(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) List(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf(`RoomController.List: %#v, %#v`, w, r)
+	uscs := usecase.NewRoomUsecase()
+	rooms, err := uscs.List()
+	if err != nil {
+		// TODO: error handling
+		http.Error(w, "failed list error", http.StatusInternalServerError)
+		return
+	}
+	res, err := json.Marshal(rooms)
+	if err != nil {
+		http.Error(w, "failed marahl error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(res)
 }
 
 func (rc roomController) UpdateTitle(w http.ResponseWriter, r *http.Request) {
