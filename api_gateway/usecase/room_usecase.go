@@ -9,6 +9,7 @@ type RoomUsecase interface {
 	Create(req domain.CreateRoomRequest) (*domain.RoomEntity, error)
 	Find(id string) (*domain.RoomEntity, error)
 	List() ([]*domain.RoomEntity, error)
+	UpdateTitle(req domain.UpdateTitleRequest) (*domain.RoomEntity, error)
 }
 
 type roomUsecase struct {
@@ -54,4 +55,13 @@ func (r roomUsecase) List() ([]*domain.RoomEntity, error) {
 	}
 
 	return rooms, nil
+}
+
+func (r roomUsecase) UpdateTitle(req domain.UpdateTitleRequest) (*domain.RoomEntity, error) {
+	room, err := r.roomRepo.UpdateTitle(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return room, nil
 }

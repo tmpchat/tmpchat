@@ -21,10 +21,19 @@ type CreateRoomRequest struct {
 	Title string `validate:"required" json:"title"`
 }
 
+type UpdateTitleRequest struct {
+	UUID  string `validate:"required" json:"uuid"`
+	Title string `validate:"required" json:"title"`
+}
+
 func NewCreateRoomRequest() CreateRoomRequest {
 	return CreateRoomRequest{UUID: uuid.New().String()}
 }
 
 func (req CreateRoomRequest) Validate() error {
+	return validator.New().Struct(req)
+}
+
+func (req UpdateTitleRequest) Validate() error {
 	return validator.New().Struct(req)
 }

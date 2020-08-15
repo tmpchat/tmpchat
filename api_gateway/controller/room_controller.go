@@ -108,5 +108,41 @@ func (rc roomController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) UpdateTitle(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf(`RoomController.UpdateTitle: %#v, %#v`, w, r)
+	uscs := usecase.NewRoomUsecase()
+
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify uuid and title", http.StatusBadRequest)
+		return
+	}
+
+	request := domain.UpdateTitleRequest{}
+	if err := json.Unmarshal(body, &request); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify uuid and title", http.StatusBadRequest)
+		return
+	}
+
+	if err := request.Validate(); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify uuid and title", http.StatusBadRequest)
+		return
+	}
+
+	response, err := uscs.UpdateTitle(request)
+	if err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "Please retry", http.StatusInternalServerError)
+		return
+	}
+
+	res, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
 }

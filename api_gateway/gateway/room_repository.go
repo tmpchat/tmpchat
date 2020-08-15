@@ -14,7 +14,7 @@ type RoomRepository interface {
 	Create(room domain.CreateRoomRequest) (*domain.RoomEntity, error)
 	Find(id string) (*domain.RoomEntity, error)
 	List() ([]*domain.RoomEntity, error)
-	UpdateTitle(id, title string) (domain.RoomEntity, error)
+	UpdateTitle(req domain.UpdateTitleRequest) (*domain.RoomEntity, error)
 }
 
 // TODO: Isn't bad performance to call DBConn every time the method is called?
@@ -92,6 +92,18 @@ func (r roomRepository) List() ([]*domain.RoomEntity, error) {
 	return rooms, nil
 }
 
-func (r roomRepository) UpdateTitle(id, title string) (domain.RoomEntity, error) {
-	panic("not impl")
+func (r roomRepository) UpdateTitle(req domain.UpdateTitleRequest) (*domain.RoomEntity, error) {
+	db := r.DBConn()
+	_, err := db.Query("update room set title = ? where external_id = ? and deleted_at is null", req.Title, req.UUID)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	result, err := r.Find(req.UUID)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
