@@ -25,7 +25,6 @@ func NewRoomUsecase() RoomUsecase {
 	}
 }
 
-// TODO: Response RoomEntity to Client
 func (r roomUsecase) Create(req domain.CreateRoomRequest) (*domain.RoomEntity, error) {
 	room, err := r.roomRepo.Create(req)
 	if err != nil {
