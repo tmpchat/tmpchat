@@ -72,5 +72,9 @@ func (r roomUsecase) Delete(req domain.DeleteRoomRequest) error {
 		return err
 	}
 
+	if err := r.mbRepo.DeleteRoom(req.UUID); err != nil {
+		return err
+	}
+
 	return nil
 }
