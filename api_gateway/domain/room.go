@@ -26,6 +26,10 @@ type UpdateTitleRequest struct {
 	Title string `validate:"required" json:"title"`
 }
 
+type DeleteRoomRequest struct {
+	UUID string `validate:"required" json:"uuid"`
+}
+
 func NewCreateRoomRequest() CreateRoomRequest {
 	return CreateRoomRequest{UUID: uuid.New().String()}
 }
@@ -35,5 +39,9 @@ func (req CreateRoomRequest) Validate() error {
 }
 
 func (req UpdateTitleRequest) Validate() error {
+	return validator.New().Struct(req)
+}
+
+func (req DeleteRoomRequest) Validate() error {
 	return validator.New().Struct(req)
 }

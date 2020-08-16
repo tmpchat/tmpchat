@@ -17,6 +17,7 @@ type RoomController interface {
 	Find(w http.ResponseWriter, r *http.Request)
 	List(w http.ResponseWriter, r *http.Request)
 	UpdateTitle(w http.ResponseWriter, r *http.Request)
+	Delete(w http.ResponseWriter, r *http.Request)
 }
 
 type roomController struct{}
@@ -145,4 +146,37 @@ func (rc roomController) UpdateTitle(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
+}
+
+func (rc roomController) Delete(w http.ResponseWriter, r *http.Request) {
+	uscs := usecase.NewRoomUsecase()
+
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify uuid", http.StatusBadRequest)
+		return
+	}
+
+	request := domain.DeleteRoomRequest{}
+	if err := json.Unmarshal(body, &request); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify uuid", http.StatusBadRequest)
+		return
+	}
+
+	if err := request.Validate(); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "please specify uuid", http.StatusBadRequest)
+		return
+	}
+
+	if err := uscs.Delete(request); err != nil {
+		fmt.Println("err: ", err)
+		http.Error(w, "room is not found", http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

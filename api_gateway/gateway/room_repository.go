@@ -3,6 +3,7 @@ package gateway
 import (
 	"database/sql"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -15,6 +16,7 @@ type RoomRepository interface {
 	Find(id string) (*domain.RoomEntity, error)
 	List() ([]*domain.RoomEntity, error)
 	UpdateTitle(req domain.UpdateTitleRequest) (*domain.RoomEntity, error)
+	Delete(req domain.DeleteRoomRequest) error
 }
 
 // TODO: Isn't bad performance to call DBConn every time the method is called?
@@ -106,4 +108,15 @@ func (r roomRepository) UpdateTitle(req domain.UpdateTitleRequest) (*domain.Room
 	}
 
 	return result, nil
+}
+
+func (r roomRepository) Delete(req domain.DeleteRoomRequest) error {
+	db := r.DBConn()
+	_, err := db.Query("update room set deleted_at = ? where external_id = ? and deleted_at is null", time.Now(), req.UUID)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	return nil
 }

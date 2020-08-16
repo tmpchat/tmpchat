@@ -10,6 +10,7 @@ type RoomUsecase interface {
 	Find(id string) (*domain.RoomEntity, error)
 	List() ([]*domain.RoomEntity, error)
 	UpdateTitle(req domain.UpdateTitleRequest) (*domain.RoomEntity, error)
+	Delete(req domain.DeleteRoomRequest) error
 }
 
 type roomUsecase struct {
@@ -64,4 +65,13 @@ func (r roomUsecase) UpdateTitle(req domain.UpdateTitleRequest) (*domain.RoomEnt
 	}
 
 	return room, nil
+}
+
+func (r roomUsecase) Delete(req domain.DeleteRoomRequest) error {
+	err := r.roomRepo.Delete(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
