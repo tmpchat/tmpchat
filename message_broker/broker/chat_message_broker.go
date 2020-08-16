@@ -1,13 +1,14 @@
 package broker
 
 import (
+	"io"
 	"log"
 	"net/http"
-	"io"
 	"strconv"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 
 	"github.com/tmpchat/tmpchat/message_broker/domain"
@@ -87,6 +88,22 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 
 		bro.hub.broadcast <- []byte(res.Value)
 	}
+}
+
+func (bro ChatMessageBroker) DeleteRoom(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if _, exists := vars["id"]; !exists {
+		http.Error(w, "please specify room id", http.StatusBadRequest)
+		return
+	}
+	uuid := vars["id"]
+
+	if err := bro.uscs.DeleteRoom(uuid); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func (bro ChatMessageBroker) closeClient(client *websocket.Conn) {

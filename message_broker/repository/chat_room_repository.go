@@ -15,6 +15,7 @@ type ChatRoomRepository interface {
 	Find(roomID string) (*domain.ChatRoom, error)
 	AddMessage(roomID string, message domain.ChatMessage) error
 	GetMessages(roomID string) ([]domain.ChatMessage, error)
+	Delete(roomID string) error
 }
 
 type chatRoomRepository struct {
@@ -85,4 +86,11 @@ func (c chatRoomRepository) GetMessages(roomID string) ([]domain.ChatMessage, er
 	}
 
 	return room.Messages, nil
+}
+
+func (c chatRoomRepository) Delete(roomID string) error {
+	if err := c.db.Del(roomID).Err(); err != nil {
+		return err
+	}
+	return nil
 }

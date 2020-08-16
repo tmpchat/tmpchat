@@ -8,6 +8,7 @@ import (
 type ChatRoomUsecase interface {
 	CreateRoom(roomID string) error
 	AddMessage(roomID string, message *domain.ChatMessage) (*domain.ChatMessage, error)
+	DeleteRoom(roomID string) error
 }
 
 type chatRoomInteractor struct {
@@ -41,6 +42,12 @@ func (itr chatRoomInteractor) AddMessage(roomID string, message *domain.ChatMess
 	}
 
 	return message, nil
-} 
+}
 
+func (itr chatRoomInteractor) DeleteRoom(roomID string) error {
+	if err := itr.repo.Delete(roomID); err != nil {
+		return err
+	}
 
+	return nil
+}
