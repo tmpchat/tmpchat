@@ -5,15 +5,20 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"github.com/tmpchat/tmpchat/message_broker/broker"
 )
 
 func main() {
 	hub := broker.NewClientHub()
 	go hub.Run()
+	router := mux.NewRouter()
 	broker := broker.NewChatMessageBroker(hub)
-	http.HandleFunc("/broker", broker.PostMessage)
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	router.HandleFunc("/room", broker.CreateRoom).Methods("POST")
+	router.HandleFunc("/room/{id}", broker.DeleteRoom).Methods("DELETE")
+	router.HandleFunc("/broker", broker.PostMessage).Methods("POST")
+	log.Fatal(http.ListenAndServe(":8081", router))
 
 	fmt.Println("Done")
 }

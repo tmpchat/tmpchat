@@ -1,11 +1,14 @@
 package broker
 
 import (
+	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 
 	"github.com/tmpchat/tmpchat/message_broker/domain"
@@ -22,6 +25,38 @@ type ChatMessageBroker struct {
 
 func NewChatMessageBroker(hub *ClientHub) *ChatMessageBroker {
 	return &ChatMessageBroker{uscs: usecase.NewChatRoomUsecase(), hub: hub}
+}
+
+func (bro ChatMessageBroker) CreateRoom(w http.ResponseWriter, r *http.Request) {
+	// TODO: http
+	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	body := make([]byte, length)
+	length, err = r.Body.Read(body)
+	if err != nil && err != io.EOF {
+		log.Print("read body error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	req, err := domain.DecodeCreateChatRoomRequest(body)
+	if err != nil {
+		log.Print("decode request error")
+		log.Print(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = bro.uscs.CreateRoom(req.ID)
+	// TODO: http response
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
@@ -53,6 +88,22 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 
 		bro.hub.broadcast <- []byte(res.Value)
 	}
+}
+
+func (bro ChatMessageBroker) DeleteRoom(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if _, exists := vars["id"]; !exists {
+		http.Error(w, "please specify room id", http.StatusBadRequest)
+		return
+	}
+	uuid := vars["id"]
+
+	if err := bro.uscs.DeleteRoom(uuid); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func (bro ChatMessageBroker) closeClient(client *websocket.Conn) {
