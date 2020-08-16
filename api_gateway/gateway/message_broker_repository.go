@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/tmpchat/tmpchat/api_gateway/domain"
 )
@@ -22,9 +23,13 @@ func NewMessageBrokerRepository() MessageBrokerRepository {
 }
 
 func (r messageBrokerRepository) CreateRoom(room domain.CreateRoomRequest) error {
+	messageBrokerHost := os.Getenv("MESSAGE_BROKER_HOST")
+	if messageBrokerHost == "" {
+		messageBrokerHost = "127.0.0.1:8081"
+	}
 	request, err := json.Marshal(domain.CraeteChatRoomRequest{ID: room.UUID})
 
-	res, err := http.Post("http://localhost:8081/room", "application/json", bytes.NewBuffer(request))
+	res, err := http.Post("http://"+messageBrokerHost+"/room", "application/json", bytes.NewBuffer(request))
 	if err != nil {
 		// TODO: check StatusCode?
 		return err
@@ -35,7 +40,11 @@ func (r messageBrokerRepository) CreateRoom(room domain.CreateRoomRequest) error
 }
 
 func (r messageBrokerRepository) DeleteRoom(roomID string) error {
-	req, err := http.NewRequest(http.MethodDelete, "http://localhost:8081/room/"+roomID, nil)
+	messageBrokerHost := os.Getenv("MESSAGE_BROKER_HOST")
+	if messageBrokerHost == "" {
+		messageBrokerHost = "127.0.0.1:8081"
+	}
+	req, err := http.NewRequest(http.MethodDelete, "http://"+messageBrokerHost+"/room/"+roomID, nil)
 	if err != nil {
 		return err
 	}
