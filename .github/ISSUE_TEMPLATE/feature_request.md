@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: ''
+about: 'Suggest an idea for tmpchat'
 title: ''
 labels: ''
 assignees: ''
@@ -9,16 +9,11 @@ assignees: ''
 
 ## Description
 
-- 
-
 ## ToDo
 
 - [ ] 
 
 ## Goal
 
-- [ ] 
-
 ## References
 
-- 

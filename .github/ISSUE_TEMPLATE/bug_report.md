@@ -1,6 +1,6 @@
 ---
-name: Task Issue
-about: 'Create a task'
+name: Bug report
+about: 'Create a bug report to help improve tmpchat'
 title: ''
 labels: ''
 assignees: ''
@@ -8,12 +8,6 @@ assignees: ''
 ---
 
 ## Description
-
-## ToDo
-
-- [ ] 
-
-## Goal
 
 ## References
 
