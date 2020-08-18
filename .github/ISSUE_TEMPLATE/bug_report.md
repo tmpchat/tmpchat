@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: 'Create a bug report to help improve tmpchat'
+about: Create a bug report to help improve tmpchat
 title: ''
 labels: ''
 assignees: ''
