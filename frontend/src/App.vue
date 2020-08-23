@@ -38,20 +38,16 @@
     </v-app-bar>
 
     <v-main>
-      <ChatPage/>
+      <router-view/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import ChatPage from './pages/ChatPage';
-
 export default {
   name: 'App',
 
-  components: {
-    ChatPage,
-  },
+  components: {},
 
   data: () => ({
     //
