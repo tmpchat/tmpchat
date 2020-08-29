@@ -27,7 +27,12 @@ func NewRoomController() RoomController {
 }
 
 func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
+	// TODO: Set '*' to Environment Variables??
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	if r.Method == http.MethodOptions {
+		return
+	}
 	uscs := usecase.NewRoomUsecase()
 
 	defer r.Body.Close()

@@ -15,6 +15,13 @@
         </tbody>
       </template>
     </v-simple-table>
+
+    <template>
+      <v-text-field label="Title" v-model="title"/>
+      <v-btn v-on:click="createRoom">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </template>
   </v-container>
 </template>
 
@@ -22,7 +29,8 @@
   export default {
     name: 'TopPage',
     data: () => ({
-      roomList: []
+      roomList: [],
+      title: ''
     }),
     methods: {
       getRooms() {
@@ -36,6 +44,19 @@
       },
       updateRoomList(response) {
         this.roomList = response.data;
+      },
+      createRoom() {
+        const axios = require('axios');
+
+        axios.post('http://localhost:8888/rooms', {
+            title: this.title
+          })
+          .then(function (response) {
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       }
     },
     created: function() {

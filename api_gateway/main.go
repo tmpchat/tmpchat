@@ -15,11 +15,13 @@ func main() {
 	// routing
 	router := mux.NewRouter()
 	con := controller.NewRoomController()
-	router.HandleFunc("/rooms", con.Create).Methods("POST")
+	router.HandleFunc("/rooms", con.Create).Methods("POST", http.MethodOptions)
 	router.HandleFunc("/rooms", con.List).Methods("GET")
 	router.HandleFunc("/rooms", con.Delete).Methods("DELETE")
 	router.HandleFunc("/rooms/{id}", con.Find).Methods("GET")
 	router.HandleFunc("/rooms/titles", con.UpdateTitle).Methods("PUT")
+
+	router.Use(mux.CORSMethodMiddleware(router))
 
 	// listen
 	apiGatewayHost := os.Getenv("API_GATEWAY_HOST")
