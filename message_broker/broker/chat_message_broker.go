@@ -60,6 +60,13 @@ func (bro ChatMessageBroker) CreateRoom(w http.ResponseWriter, r *http.Request) 
 }
 
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if _, exists := vars["id"]; !exists {
+		http.Error(w, "please specify room id", http.StatusBadRequest)
+		return
+	}
+	roomID := vars["id"]
+
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -77,7 +84,6 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 		}
 		log.Printf("recv: %s", message)
 
-		roomID := "example_room_id"
 		chatmessage := &domain.ChatMessage{ID: uuid.New().String(), Value: string(message), CreatedAt: time.Now()}
 		res, err := bro.uscs.AddMessage(roomID, chatmessage)
 		if err != nil {

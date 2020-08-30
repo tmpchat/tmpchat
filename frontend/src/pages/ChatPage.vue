@@ -51,7 +51,7 @@
     methods: {
       openWebSocket(openedCallback) {
         console.log("open websocket", this.socket)
-        this.socket = new WebSocket('ws://localhost:8081/broker');
+        this.socket = new WebSocket('ws://localhost:8081/broker/' + this.$route.params.id);
         if (openedCallback != null) {
           this.socket.onopen = openedCallback;
         }

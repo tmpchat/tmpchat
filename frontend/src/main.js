@@ -10,7 +10,7 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', component: TopPage },
-  { path: '/chat', component: ChatPage }
+  { path: '/chat/:id', component: ChatPage }
 ]
 
 const router = new VueRouter({
