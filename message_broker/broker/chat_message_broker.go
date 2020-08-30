@@ -60,6 +60,13 @@ func (bro ChatMessageBroker) CreateRoom(w http.ResponseWriter, r *http.Request) 
 }
 
 func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if _, exists := vars["id"]; !exists {
+		http.Error(w, "please specify room id", http.StatusBadRequest)
+		return
+	}
+	roomID := vars["id"]
+
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -67,17 +74,17 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	log.Print("receive message")
-	bro.hub.register <- c
-	defer bro.closeClient(c)
+	client := &Client{Conn: c, RoomID: roomID}
+	bro.hub.register <- client
+	defer bro.closeClient(client)
 	for {
-		_, message, err := c.ReadMessage()
+		_, message, err := client.Conn.ReadMessage()
 		if err != nil {
 			log.Println("read:", err)
 			break
 		}
 		log.Printf("recv: %s", message)
 
-		roomID := "example_room_id"
 		chatmessage := &domain.ChatMessage{ID: uuid.New().String(), Value: string(message), CreatedAt: time.Now()}
 		res, err := bro.uscs.AddMessage(roomID, chatmessage)
 		if err != nil {
@@ -86,7 +93,7 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 			continue
 		}
 
-		bro.hub.broadcast <- []byte(res.Value)
+		bro.hub.broadcast <- Message{Value: []byte(res.Value), RoomID: roomID}
 	}
 }
 
@@ -103,11 +110,11 @@ func (bro ChatMessageBroker) DeleteRoom(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	bro.hub.deleteRoom <- uuid
+
 	w.WriteHeader(http.StatusOK)
 }
 
-func (bro ChatMessageBroker) closeClient(client *websocket.Conn) {
-	defer client.Close()
-	client.WriteMessage(websocket.CloseMessage, []byte{})
+func (bro ChatMessageBroker) closeClient(client *Client) {
 	bro.hub.unregister <- client
 }

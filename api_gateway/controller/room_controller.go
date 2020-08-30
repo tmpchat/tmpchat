@@ -27,6 +27,12 @@ func NewRoomController() RoomController {
 }
 
 func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
+	// TODO: Set '*' to Environment Variables??
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	if r.Method == http.MethodOptions {
+		return
+	}
 	uscs := usecase.NewRoomUsecase()
 
 	defer r.Body.Close()
@@ -67,6 +73,7 @@ func (rc roomController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) Find(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	vars := mux.Vars(r)
 	if _, exists := vars["id"]; !exists {
 		http.Error(w, "please specify room id", http.StatusBadRequest)
@@ -92,6 +99,8 @@ func (rc roomController) Find(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) List(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	uscs := usecase.NewRoomUsecase()
 	rooms, err := uscs.List()
 	if err != nil {
@@ -109,6 +118,7 @@ func (rc roomController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) UpdateTitle(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	uscs := usecase.NewRoomUsecase()
 
 	defer r.Body.Close()
@@ -149,6 +159,7 @@ func (rc roomController) UpdateTitle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rc roomController) Delete(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	uscs := usecase.NewRoomUsecase()
 
 	defer r.Body.Close()

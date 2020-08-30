@@ -17,7 +17,7 @@ func main() {
 	broker := broker.NewChatMessageBroker(hub)
 	router.HandleFunc("/room", broker.CreateRoom).Methods("POST")
 	router.HandleFunc("/room/{id}", broker.DeleteRoom).Methods("DELETE")
-	router.HandleFunc("/broker", broker.PostMessage).Methods("GET")
+	router.HandleFunc("/broker/{id}", broker.PostMessage).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8081", router))
 
 	fmt.Println("Done")
