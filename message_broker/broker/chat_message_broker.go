@@ -110,11 +110,11 @@ func (bro ChatMessageBroker) DeleteRoom(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	bro.hub.deleteRoom <- uuid
+
 	w.WriteHeader(http.StatusOK)
 }
 
 func (bro ChatMessageBroker) closeClient(client *Client) {
-	defer client.Conn.Close()
-	client.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 	bro.hub.unregister <- client
 }

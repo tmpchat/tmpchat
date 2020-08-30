@@ -2,6 +2,7 @@ package broker
 
 import (
 	"fmt"
+
 	"github.com/gorilla/websocket"
 )
 
@@ -17,15 +18,23 @@ type ClientHub struct {
 
 	// Unregister requests from client.
 	unregister chan *Client
+
+	// Delete room.
+	deleteRoom chan string
 }
 
 type Client struct {
-	Conn *websocket.Conn
+	Conn   *websocket.Conn
 	RoomID string
 }
 
+func (c *Client) Close() {
+	defer c.Conn.Close()
+	c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+}
+
 type Message struct {
-	Value []byte
+	Value  []byte
 	RoomID string
 }
 
@@ -35,9 +44,9 @@ func NewClientHub() *ClientHub {
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[string]map[*Client]bool),
+		deleteRoom: make(chan string),
 	}
 }
-
 
 func (h *ClientHub) Run() {
 	for {
@@ -49,6 +58,7 @@ func (h *ClientHub) Run() {
 			h.clients[client.RoomID][client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client.RoomID][client]; ok {
+				client.Close()
 				delete(h.clients[client.RoomID], client)
 				// close(client.send)
 			}
@@ -65,6 +75,13 @@ func (h *ClientHub) Run() {
 				if err != nil {
 					fmt.Println("write message error")
 				}
+			}
+		case roomID := <-h.deleteRoom:
+			if _, ok := h.clients[roomID]; ok {
+				for client := range h.clients[roomID] {
+					client.Close()
+				}
+				delete(h.clients, roomID)
 			}
 		}
 	}
