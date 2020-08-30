@@ -26,6 +26,7 @@
 </template>
 
 <script>
+  const axios = require('axios')
   export default {
     name: 'TopPage',
     data: () => ({
@@ -34,8 +35,6 @@
     }),
     methods: {
       getRooms() {
-        const axios = require('axios');
-
         axios.get('http://localhost:8888/rooms')
           .then(this.updateRoomList)
           .catch(function (error) {
@@ -46,8 +45,6 @@
         this.roomList = response.data;
       },
       createRoom() {
-        const axios = require('axios');
-
         axios.post('http://localhost:8888/rooms', {
             title: this.title
           })
