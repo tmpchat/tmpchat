@@ -43,6 +43,9 @@ func (h *ClientHub) Run() {
 	for {
 		select {
 		case client := <-h.register:
+			if _, ok := h.clients[client.RoomID]; !ok {
+				h.clients[client.RoomID] = make(map[*Client]bool)
+			}
 			h.clients[client.RoomID][client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client.RoomID][client]; ok {
