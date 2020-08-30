@@ -74,10 +74,11 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	log.Print("receive message")
-	bro.hub.register <- c
-	defer bro.closeClient(c)
+	client := &Client{Conn: c, RoomID: roomID}
+	bro.hub.register <- client
+	defer bro.closeClient(client)
 	for {
-		_, message, err := c.ReadMessage()
+		_, message, err := client.Conn.ReadMessage()
 		if err != nil {
 			log.Println("read:", err)
 			break
@@ -92,7 +93,7 @@ func (bro ChatMessageBroker) PostMessage(w http.ResponseWriter, r *http.Request)
 			continue
 		}
 
-		bro.hub.broadcast <- []byte(res.Value)
+		bro.hub.broadcast <- Message{Value: []byte(res.Value), RoomID: roomID}
 	}
 }
 
@@ -112,8 +113,8 @@ func (bro ChatMessageBroker) DeleteRoom(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (bro ChatMessageBroker) closeClient(client *websocket.Conn) {
-	defer client.Close()
-	client.WriteMessage(websocket.CloseMessage, []byte{})
+func (bro ChatMessageBroker) closeClient(client *Client) {
+	defer client.Conn.Close()
+	client.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 	bro.hub.unregister <- client
 }
