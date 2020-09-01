@@ -25,6 +25,10 @@ services:
   api_gateway:
     build:
       context: ./api_gateway
+      target: build
+    volumes:
+      - ./api_gateway:/go/app
+    command: air -c .air.toml
     environment:
       - API_GATEWAY_HOST=:8888
       - MESSAGE_BROKER_HOST
