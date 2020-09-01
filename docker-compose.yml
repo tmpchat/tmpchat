@@ -15,6 +15,10 @@ services:
   message_broker:
     build:
       context: ./message_broker
+      target: build
+    volumes:
+      - ./message_broker:/go/app
+    command: air -c .air.toml
     environment:
       - REDIS_HOST=redis:6379
     ports:

@@ -5,7 +5,8 @@ WORKDIR /go/app
 COPY . .
 
 RUN apk add --no-cache git \
-  && go build -o message_broker
+  && go build -o message_broker \
+  && go get -u github.com/cosmtrek/air
 
 
 FROM alpine
