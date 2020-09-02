@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Chat Page, Room Title</h1>
+    <h1>{{ roomInfo.title }}</h1>
     <v-row>
       <v-col cols="12">
         <li v-for="message in messages" :key="message.title">
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  const axios = require('axios')
   export default {
     name: 'ChatPage',
 
@@ -46,7 +47,8 @@
       messages: [],
       postMessage: "",
       socket: null,
-      state: "idle"
+      state: "idle",
+      roomInfo: []
     }),
     methods: {
       openWebSocket(openedCallback) {
@@ -99,10 +101,22 @@
           title: "Example",
           value: event.data
         });
+      },
+      getRoom(roomId) {
+        axios.get('http://localhost:8888/rooms/' + roomId)
+          .then(this.updateRoom)
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
+      updateRoom(response) {
+        console.log(response);
+        this.roomInfo = response.data;
       }
     },
     created: function() {
       this.openWebSocket(this.setIdle);
+      this.getRoom(this.$route.params.id);
     },
     beforeDestroy: function() {
       this.socket.close();
