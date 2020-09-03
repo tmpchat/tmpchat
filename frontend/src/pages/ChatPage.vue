@@ -3,14 +3,13 @@
     <h1>{{ roomInfo.title }}</h1>
     <v-row>
       <v-col cols="12">
-        <li v-for="message in messages" :key="message.title">
+        <li v-for="message in messages" :key="message.title" class="pb-1">
           <v-card
             outlined
           >
-            <v-list-item three-line style="text-align: left;">
+            <v-list-item single-line style="text-align: left;">
               <v-list-item-content>
-                <v-list-item-title >{{ message.title }}</v-list-item-title>
-                <v-list-item-subtitle>{{ message.value }}</v-list-item-subtitle>
+                {{ message.value }}
               </v-list-item-content>
             </v-list-item>
           </v-card>
@@ -98,7 +97,6 @@
       receiveMessage(event) {
         console.log('Message from server ', event.data);
         this.messages.push({
-          title: "Example",
           value: event.data
         });
       },
