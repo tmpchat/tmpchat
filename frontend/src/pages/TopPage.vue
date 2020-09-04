@@ -34,14 +34,14 @@
       title: ''
     }),
     methods: {
-      getRooms() {
+      updateRooms() {
         axios.get('http://localhost:8888/rooms')
-          .then(this.updateRoomList)
+          .then(this.setRoomList)
           .catch(function (error) {
             console.log(error);
           });
       },
-      updateRoomList(response) {
+      setRoomList(response) {
         this.roomList = response.data;
       },
       createRoom() {
@@ -57,7 +57,7 @@
       }
     },
     created: function() {
-      this.getRooms();
+      this.updateRooms();
     }
   }
 </script>

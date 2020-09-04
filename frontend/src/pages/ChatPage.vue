@@ -99,21 +99,21 @@
           value: event.data
         });
       },
-      getRoom(roomId) {
+      updateRoom(roomId) {
         axios.get('http://localhost:8888/rooms/' + roomId)
-          .then(this.updateRoom)
+          .then(this.setRoom)
           .catch(function (error) {
             console.log(error);
           });
       },
-      updateRoom(response) {
+      setRoom(response) {
         console.log(response);
         this.roomInfo = response.data;
       }
     },
     created: function() {
       this.openWebSocket(this.setIdle);
-      this.getRoom(this.$route.params.id);
+      this.updateRoom(this.$route.params.id);
     },
     beforeDestroy: function() {
       this.socket.close();
