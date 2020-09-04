@@ -3,7 +3,7 @@
     <h1>{{ roomInfo.title }}</h1>
     <v-row>
       <v-col cols="12">
-        <li v-for="message in messages" :key="message.title" class="pb-1">
+        <li v-for="message in messages" :key="message.uuid" class="pb-1">
           <v-card
             outlined
           >
