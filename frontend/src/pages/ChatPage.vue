@@ -46,7 +46,7 @@
       postMessage: "",
       socket: null,
       state: "idle",
-      roomInfo: []
+      roomInfo: {}
     }),
     methods: {
       openWebSocket(openedCallback) {
