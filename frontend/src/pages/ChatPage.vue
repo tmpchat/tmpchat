@@ -1,16 +1,15 @@
 <template>
   <v-container>
-    <h1>Chat Page, Room Title</h1>
+    <h1>{{ roomInfo.title }}</h1>
     <v-row>
       <v-col cols="12">
-        <li v-for="message in messages" :key="message.title">
+        <li v-for="message in messages" :key="message.uuid" class="pb-1">
           <v-card
             outlined
           >
-            <v-list-item three-line style="text-align: left;">
+            <v-list-item single-line style="text-align: left;">
               <v-list-item-content>
-                <v-list-item-title >{{ message.title }}</v-list-item-title>
-                <v-list-item-subtitle>{{ message.value }}</v-list-item-subtitle>
+                {{ message.value }}
               </v-list-item-content>
             </v-list-item>
           </v-card>
@@ -18,27 +17,27 @@
       </v-col>
     </v-row>
     <v-row>
-      
-    <template v-if="state === 'idle'">
-      <v-text-field label="Message" v-model="postMessage"/>
-      <v-btn v-on:click="sendMessage">
-        <v-icon>mdi-send</v-icon>
-      </v-btn>
-    </template>
-    <template v-else-if="state === 'sendError'">
-      <v-text-field label="Message" v-model="postMessage" error/>
-      <v-btn v-on:click="retrySendMessage">
-        Retry
-      </v-btn>
-      <v-btn v-on:click="clearMessage" color="error">
-        Cancel
-      </v-btn>
-    </template>
+      <template v-if="state === 'idle'">
+        <v-text-field label="Message" v-model="postMessage"/>
+        <v-btn v-on:click="sendMessage">
+          <v-icon>mdi-send</v-icon>
+        </v-btn>
+      </template>
+      <template v-else-if="state === 'sendError'">
+        <v-text-field label="Message" v-model="postMessage" error/>
+        <v-btn v-on:click="retrySendMessage">
+          Retry
+        </v-btn>
+        <v-btn v-on:click="clearMessage" color="error">
+          Cancel
+        </v-btn>
+      </template>
     </v-row>
   </v-container>
 </template>
 
 <script>
+  const axios = require('axios')
   export default {
     name: 'ChatPage',
 
@@ -46,7 +45,8 @@
       messages: [],
       postMessage: "",
       socket: null,
-      state: "idle"
+      state: "idle",
+      roomInfo: {}
     }),
     methods: {
       openWebSocket(openedCallback) {
@@ -96,13 +96,24 @@
       receiveMessage(event) {
         console.log('Message from server ', event.data);
         this.messages.push({
-          title: "Example",
           value: event.data
         });
+      },
+      updateRoom(roomId) {
+        axios.get('http://localhost:8888/rooms/' + roomId)
+          .then(this.setRoom)
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
+      setRoom(response) {
+        console.log(response);
+        this.roomInfo = response.data;
       }
     },
     created: function() {
       this.openWebSocket(this.setIdle);
+      this.updateRoom(this.$route.params.id);
     },
     beforeDestroy: function() {
       this.socket.close();

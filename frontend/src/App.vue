@@ -26,6 +26,19 @@
     <v-main>
       <router-view/>
     </v-main>
+
+    <v-footer
+      app
+      color="primary"
+      dark
+    >
+      <v-col
+        class="text-center"
+        cols="12"
+      >
+        {{ currentYear }} - <strong>tmpchat</strong>
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 
@@ -36,8 +49,16 @@ export default {
   components: {},
 
   data: () => ({
-    //
+    currentYear: ""
   }),
+  methods: {
+    getCurrentYear() {
+      this.currentYear = new Date().getFullYear();
+    }
+  },
+  created: function() {
+    this.getCurrentYear();
+  }
 };
 </script>
 
