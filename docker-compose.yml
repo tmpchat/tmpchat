@@ -1,11 +1,13 @@
 version: '3.8'
 services:
   frontend:
-    image: nginx:1.19
+    build:
+      context: ./frontend
     volumes:
-      - ./frontend/dist/:/usr/share/nginx/html
+      - ./frontend:/app
+      - /app/node_modules
     ports:
-      - "8080:80"
+      - "8080:8080"
   redis:
     image: redis:6.0.5-alpine
     ports:
@@ -13,6 +15,10 @@ services:
   message_broker:
     build:
       context: ./message_broker
+      target: build
+    volumes:
+      - ./message_broker:/go/app
+    command: air -c .air.toml
     environment:
       - REDIS_HOST=redis:6379
     ports:
@@ -23,6 +29,10 @@ services:
   api_gateway:
     build:
       context: ./api_gateway
+      target: build
+    volumes:
+      - ./api_gateway:/go/app
+    command: air -c .air.toml
     environment:
       - API_GATEWAY_HOST=:8888
       - MESSAGE_BROKER_HOST
