@@ -36,7 +36,7 @@
         class="text-center"
         cols="12"
       >
-        {{ new Date().getFullYear() }} - <strong>tmpchat</strong>
+        {{ currentYear }} - <strong>tmpchat</strong>
       </v-col>
     </v-footer>
   </v-app>
@@ -49,8 +49,16 @@ export default {
   components: {},
 
   data: () => ({
-    //
+    currentYear: ""
   }),
+  methods: {
+    getCurrentYear() {
+      this.currentYear = new Date().getFullYear();
+    }
+  },
+  created: function() {
+    this.getCurrentYear();
+  }
 };
 </script>
 
