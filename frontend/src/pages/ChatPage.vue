@@ -16,23 +16,31 @@
         </li>
       </v-col>
     </v-row>
-    <v-row>
-      <template v-if="state === 'idle'">
-        <v-text-field label="Message" v-model="postMessage"/>
-        <v-btn v-on:click="sendMessage">
-          <v-icon>mdi-send</v-icon>
-        </v-btn>
-      </template>
-      <template v-else-if="state === 'sendError'">
-        <v-text-field label="Message" v-model="postMessage" error/>
-        <v-btn v-on:click="retrySendMessage">
-          Retry
-        </v-btn>
-        <v-btn v-on:click="clearMessage" color="error">
-          Cancel
-        </v-btn>
-      </template>
-    </v-row>
+    <v-footer fixed color="white">
+      <v-container class="ma-0 pa-0">
+        <v-row no-gutters>
+          <v-col>
+            <div class="d-flex flex-row align-center">
+              <template v-if="state === 'idle'">
+                <v-text-field label="Message" v-model="postMessage"/>
+                <v-btn v-on:click="sendMessage" icon class="ml-4">
+                  <v-icon>mdi-send</v-icon>
+                </v-btn>
+              </template>
+              <template v-else-if="state === 'sendError'">
+                <v-text-field label="Message" v-model="postMessage" error/>
+                <v-btn v-on:click="retrySendMessage" class="ml-4">
+                  Retry
+                </v-btn>
+                <v-btn v-on:click="clearMessage" class="ml-4" color="error">
+                  Cancel
+                </v-btn>
+              </template>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-footer>
   </v-container>
 </template>
 
