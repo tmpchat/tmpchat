@@ -22,7 +22,7 @@
           <v-col>
             <div class="d-flex flex-row align-center">
               <template v-if="state === 'idle'">
-                <v-text-field label="Message" v-model="postMessage"/>
+                <v-text-field autofocus label="Message" v-model="postMessage" @keypress.enter="sendMessage"/>
                 <v-btn v-on:click="sendMessage" icon class="ml-4">
                   <v-icon>mdi-send</v-icon>
                 </v-btn>
