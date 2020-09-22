@@ -1,21 +1,23 @@
 <template>
   <v-container>
     <h1>{{ roomInfo.title }}</h1>
-    <v-row>
-      <v-col cols="12">
-        <li v-for="message in messages" :key="message.uuid" class="pb-1">
-          <v-card
-            outlined
-          >
-            <v-list-item single-line style="text-align: left;">
-              <v-list-item-content>
-                {{ message.value }}
-              </v-list-item-content>
-            </v-list-item>
-          </v-card>
-        </li>
-      </v-col>
-    </v-row>
+    <div class="chatList">
+      <v-row>
+        <v-col cols="12">
+          <li v-for="message in messages" :key="message.uuid" class="pb-1">
+            <v-card
+              outlined
+            >
+              <v-list-item single-line style="text-align: left;">
+                <v-list-item-content>
+                  {{ message.value }}
+                </v-list-item-content>
+              </v-list-item>
+            </v-card>
+          </li>
+        </v-col>
+      </v-row>
+    </div>
     <v-footer fixed color="white">
       <v-container class="ma-0 pa-0">
         <v-row no-gutters>
@@ -132,5 +134,14 @@
 <style scoped>
 li {
   list-style: none;
+}
+.chatList {
+  height: auto;
+  overflow: scroll;
+  -ms-overflow-style: none;    /* IE, Edge 対応 */
+  scrollbar-width: none;       /* Firefox 対応 */
+}
+.chatList::-webkit-scrollbar {  /* Chrome, Safari 対応 */
+  display:none;
 }
 </style>
