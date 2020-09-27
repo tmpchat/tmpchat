@@ -18,7 +18,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-footer fixed color="white">
+    <div class="text-field">
       <v-container class="ma-0 pa-0">
         <v-row no-gutters>
           <v-col>
@@ -42,7 +42,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-footer>
+    </div>
   </v-container>
 </template>
 
@@ -136,12 +136,20 @@ li {
   list-style: none;
 }
 .chatList {
-  height: auto;
+  height: 500px;
   overflow: scroll;
   -ms-overflow-style: none;    /* IE, Edge 対応 */
   scrollbar-width: none;       /* Firefox 対応 */
+  margin-bottom: 200px;
 }
 .chatList::-webkit-scrollbar {  /* Chrome, Safari 対応 */
   display:none;
+}
+
+.text-field {
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  height: 70px;
 }
 </style>
