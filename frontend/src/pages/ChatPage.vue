@@ -136,11 +136,10 @@ li {
   list-style: none;
 }
 .chatList {
-  height: 500px;
+  height: 80vh; /* TODO: 要自動調整 */
   overflow: scroll;
   -ms-overflow-style: none;    /* IE, Edge 対応 */
   scrollbar-width: none;       /* Firefox 対応 */
-  margin-bottom: 200px;
 }
 .chatList::-webkit-scrollbar {  /* Chrome, Safari 対応 */
   display:none;
@@ -148,7 +147,7 @@ li {
 
 .text-field {
   bottom: 0;
-  position: fixed;
+  display: block;
   width: 100%;
   height: 70px;
 }
