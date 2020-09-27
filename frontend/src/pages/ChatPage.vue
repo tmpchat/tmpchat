@@ -1,38 +1,48 @@
 <template>
   <v-container>
     <h1>{{ roomInfo.title }}</h1>
-    <v-row>
-      <v-col cols="12">
-        <li v-for="message in messages" :key="message.uuid" class="pb-1">
-          <v-card
-            outlined
-          >
-            <v-list-item single-line style="text-align: left;">
-              <v-list-item-content>
-                {{ message.value }}
-              </v-list-item-content>
-            </v-list-item>
-          </v-card>
-        </li>
-      </v-col>
-    </v-row>
-    <v-row>
-      <template v-if="state === 'idle'">
-        <v-text-field label="Message" v-model="postMessage"/>
-        <v-btn v-on:click="sendMessage">
-          <v-icon>mdi-send</v-icon>
-        </v-btn>
-      </template>
-      <template v-else-if="state === 'sendError'">
-        <v-text-field label="Message" v-model="postMessage" error/>
-        <v-btn v-on:click="retrySendMessage">
-          Retry
-        </v-btn>
-        <v-btn v-on:click="clearMessage" color="error">
-          Cancel
-        </v-btn>
-      </template>
-    </v-row>
+    <div class="chatList">
+      <v-row>
+        <v-col cols="12">
+          <li v-for="message in messages" :key="message.uuid" class="pb-1">
+            <v-card
+              outlined
+            >
+              <v-list-item single-line style="text-align: left;">
+                <v-list-item-content>
+                  {{ message.value }}
+                </v-list-item-content>
+              </v-list-item>
+            </v-card>
+          </li>
+        </v-col>
+      </v-row>
+    </div>
+    <div class="text-field">
+      <v-container class="ma-0 pa-0">
+        <v-row no-gutters>
+          <v-col>
+            <div class="d-flex flex-row align-center">
+              <template v-if="state === 'idle'">
+                <v-text-field autofocus label="Message" v-model="postMessage" @keypress.enter="sendMessage"/>
+                <v-btn v-on:click="sendMessage" icon class="ml-4">
+                  <v-icon>mdi-send</v-icon>
+                </v-btn>
+              </template>
+              <template v-else-if="state === 'sendError'">
+                <v-text-field label="Message" v-model="postMessage" error/>
+                <v-btn v-on:click="retrySendMessage" class="ml-4">
+                  Retry
+                </v-btn>
+                <v-btn v-on:click="clearMessage" class="ml-4" color="error">
+                  Cancel
+                </v-btn>
+              </template>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </v-container>
 </template>
 
@@ -124,5 +134,21 @@
 <style scoped>
 li {
   list-style: none;
+}
+.chatList {
+  height: 80vh; /* TODO: 要自動調整 */
+  overflow: scroll;
+  -ms-overflow-style: none;    /* IE, Edge 対応 */
+  scrollbar-width: none;       /* Firefox 対応 */
+}
+.chatList::-webkit-scrollbar {  /* Chrome, Safari 対応 */
+  display:none;
+}
+
+.text-field {
+  bottom: 0;
+  display: block;
+  width: 100%;
+  height: 70px;
 }
 </style>

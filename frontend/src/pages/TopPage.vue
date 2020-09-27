@@ -22,6 +22,19 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
+
+    <v-footer
+      app
+      color="primary"
+      dark
+    >
+      <v-col
+        class="text-center"
+        cols="12"
+      >
+        {{ currentYear }} - <strong>tmpchat</strong>
+      </v-col>
+    </v-footer>
   </v-container>
 </template>
 
@@ -31,7 +44,8 @@
     name: 'TopPage',
     data: () => ({
       roomList: [],
-      title: ''
+      title: '',
+      currentYear: ''
     }),
     methods: {
       updateRooms() {
@@ -54,10 +68,14 @@
           .catch(function (error) {
             console.log(error);
           });
+      },
+      getCurrentYear() {
+        this.currentYear = new Date().getFullYear();
       }
     },
     created: function() {
       this.updateRooms();
+      this.getCurrentYear();
     }
   }
 </script>
